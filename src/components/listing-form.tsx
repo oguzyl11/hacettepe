@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { ImagePlus } from "lucide-react";
-import { createItem } from "@/server/listing-actions";
+import { createItem } from "@/app/actions/item";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,12 +16,20 @@ export function ListingForm({ databaseReady }: { databaseReady: boolean }) {
   return (
     <form action={action} className="space-y-6">
       <section className="rounded-xl border border-dashed border-border bg-card p-5">
-        <div className="flex items-center gap-2 text-sm font-semibold">
+        <Label htmlFor="images" className="flex items-center gap-2 text-sm font-semibold">
           <ImagePlus className="size-4 text-primary" />
-          Fotoğraf
-        </div>
+          Fotoğraflar
+        </Label>
+        <input
+          id="images"
+          name="images"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          className="mt-3 block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white"
+        />
         <p className="mt-2 text-sm text-muted-foreground">
-          Sürükle-bırak alanı hazır. Görseller Vercel Blob bağlanınca yüklenecek; ilan şimdilik yer tutucu galeriyle yayınlanır.
+          En fazla 4 görsel. JPG, PNG veya WEBP, her biri 4 MB’a kadar. Yükleme Vercel Blob token’ı ister.
         </p>
       </section>
 

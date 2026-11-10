@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/", label: "Vitrin" },
   { href: "/ilan/yeni", label: "İlan Ekle" },
-  { href: "/teklifler", label: "Tekliflerim" },
   { href: "/ilanlarim", label: "İlanlarım" },
 ];
 

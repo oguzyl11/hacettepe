@@ -99,7 +99,7 @@ export function SignInForm({
         {state.message ? (
           <p
             className={
-              state.ok ? "text-sm text-emerald-700" : "text-sm text-red-700"
+              state.success ? "text-sm text-emerald-700" : "text-sm text-red-700"
             }
           >
             {state.message}

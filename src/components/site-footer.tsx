@@ -23,7 +23,6 @@ export function SiteFooter() {
           <ul className="mt-2 space-y-1 text-sm">
             <li><Link href="/" className="text-muted-foreground hover:text-foreground">Tüm ilanlar</Link></li>
             <li><Link href="/ilan/yeni" className="text-muted-foreground hover:text-foreground">İlan paylaş</Link></li>
-            <li><Link href="/teklifler" className="text-muted-foreground hover:text-foreground">Tekliflerim</Link></li>
             <li><Link href="/ilanlarim" className="text-muted-foreground hover:text-foreground">İlanlarım</Link></li>
           </ul>
         </div>

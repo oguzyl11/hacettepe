@@ -5,52 +5,32 @@ import { BadgeCheck, MapPin } from "lucide-react";
 import { auth } from "@/auth";
 import { CommentSection } from "@/components/comment-section";
 import { Gallery } from "@/components/gallery";
-import { OfferDialog } from "@/components/offer-dialog";
 import { OwnerContact } from "@/components/owner-contact";
-import { getTradeActivity } from "@/lib/activity";
 import { categoryLabel, conditionLabel } from "@/lib/labels";
 import { getListing } from "@/lib/listings";
 import { formatDate } from "@/lib/utils";
 
 export default function ItemPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ teklif?: string }>;
 }) {
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
       <Suspense fallback={<div className="h-96 animate-pulse rounded-xl bg-muted" />}>
-        <ItemBody params={params} searchParams={searchParams} />
+        <ItemBody params={params} />
       </Suspense>
     </main>
   );
 }
 
-async function ItemBody({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ teklif?: string }>;
-}) {
+async function ItemBody({ params }: { params: Promise<{ id: string }> }) {
   await connection();
-  const [{ id }, query] = await Promise.all([params, searchParams]);
-  const [{ listing, usingSamples }, session] = await Promise.all([
-    getListing(id),
-    auth(),
-  ]);
+  const { id } = await params;
+  const [{ listing, usingSamples }, session] = await Promise.all([getListing(id), auth()]);
   if (!listing) notFound();
 
-  const signedIn = Boolean(session?.user?.id);
-  const isOwner = session?.user?.id === listing.owner.id;
-  const activity = session?.user?.id ? await getTradeActivity(session.user.id) : null;
-  const ownItems = (activity?.listings ?? [])
-    .filter((item) => item.id !== listing.id)
-    .map((item) => ({ id: item.id, title: item.title }));
-  const offerMode = usingSamples ? "offline" : !signedIn ? "signin" : isOwner ? "owner" : "ready";
-  const commentMode = usingSamples ? "offline" : signedIn ? "ready" : "signin";
+  const commentMode = usingSamples ? "offline" : session?.user?.id ? "ready" : "signin";
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.8fr)]">
@@ -81,14 +61,6 @@ async function ItemBody({
       </div>
       <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
         <OwnerContact owner={listing.owner} />
-        <OfferDialog
-          itemId={listing.id}
-          targetTitle={listing.title}
-          ownerName={listing.owner.name}
-          ownItems={ownItems}
-          mode={offerMode}
-          defaultOpen={query.teklif === "1"}
-        />
       </aside>
     </div>
   );

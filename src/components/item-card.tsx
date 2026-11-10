@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import { InstagramMark } from "@/components/instagram-mark";
 import { ItemCondition } from "@prisma/client";
 import { categoryLabel, conditionLabel } from "@/lib/labels";
 import type { Listing } from "@/lib/listings";
@@ -16,8 +17,12 @@ export function ItemCard({ listing }: { listing: Listing }) {
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_1px_3px_rgba(15,23,42,0.05)]">
       <Link href={`/ilan/${listing.id}`} className="relative block">
-        <div className="flex aspect-[4/3] items-end bg-gradient-to-br from-slate-200 to-slate-100 p-3">
-          <span className="rounded-full bg-white/90 px-2 py-1 text-[10px] font-bold tracking-wide text-slate-600 uppercase">
+        <div className="relative flex aspect-[4/3] items-end overflow-hidden bg-gradient-to-br from-slate-200 to-slate-100 p-3">
+          {listing.images[0] ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={listing.images[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          ) : null}
+          <span className="relative rounded-full bg-white/90 px-2 py-1 text-[10px] font-bold tracking-wide text-slate-600 uppercase">
             {categoryLabel[listing.category]}
           </span>
         </div>
@@ -35,12 +40,17 @@ export function ItemCard({ listing }: { listing: Listing }) {
         </p>
         <div className="mt-auto flex items-center justify-between gap-2">
           <span className="truncate text-xs font-medium">{listing.owner.name}</span>
-          <Link
-            href={`/ilan/${listing.id}?teklif=1`}
-            className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white hover:bg-[#991b1b]"
-          >
-            Takas Teklifi Yap
-          </Link>
+          {listing.owner.instagramHandle ? (
+            <a
+              href={`https://instagram.com/${listing.owner.instagramHandle}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 rounded-lg bg-foreground px-3 py-2 text-xs font-semibold text-white"
+            >
+              <InstagramMark className="size-3.5" />
+              Instagram
+            </a>
+          ) : null}
         </div>
       </div>
     </article>

@@ -17,11 +17,13 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
     "@prisma/client": "^6.19.3",
+    "@vercel/blob": "^2.9.0",
     "next": "16.4.6",
     "next-auth": "^5.0.0-beta.32",
     "nodemailer": "^8.0.11",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@radix-ui/react-dialog": "^1.3.1",

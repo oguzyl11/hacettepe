@@ -14,7 +14,7 @@ const devStudentEmail = "dev.ogrenci@hacettepe.edu.tr";
 export async function signInWithGoogle(callbackPath: string) {
   if (!authProviders.google) {
     return {
-      ok: false,
+      success: false,
       message: "Google girişi henüz ayarlı değil.",
     } satisfies ActionState;
   }
@@ -29,13 +29,13 @@ export async function requestMagicLink(
   const email = String(formData.get("email") ?? "");
   if (!isHacettepeEmail(email)) {
     return {
-      ok: false,
+      success: false,
       message: "Yalnızca @hacettepe.edu.tr adresleri giriş yapabilir.",
     };
   }
   if (!authProviders.email) {
     return {
-      ok: false,
+      success: false,
       message:
         "E-posta girişi henüz ayarlı değil. EMAIL_SERVER ve EMAIL_FROM ekle.",
     };
@@ -49,7 +49,7 @@ export async function requestMagicLink(
   } catch (error) {
     if (error instanceof AuthError) {
       return {
-        ok: false,
+        success: false,
         message: "Giriş bağlantısı gönderilemedi. E-posta ayarını kontrol et.",
       };
     }
@@ -57,7 +57,7 @@ export async function requestMagicLink(
   }
 
   return {
-    ok: true,
+    success: true,
     message: "Bağlantı gönderildiyse gelen kutunu kontrol et.",
   };
 }
@@ -65,7 +65,7 @@ export async function requestMagicLink(
 export async function signInAsDevStudent(callbackPath: string) {
   if (process.env.NODE_ENV !== "development") {
     return {
-      ok: false,
+      success: false,
       message: "Bu giriş yalnızca yerel geliştirmede açık.",
     } satisfies ActionState;
   }
@@ -73,7 +73,7 @@ export async function signInAsDevStudent(callbackPath: string) {
   const prisma = getPrisma();
   if (!prisma) {
     return {
-      ok: false,
+      success: false,
       message: "Veritabanı bağlı değil.",
     } satisfies ActionState;
   }

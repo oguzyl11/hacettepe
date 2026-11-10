@@ -1,6 +1,9 @@
-export type ActionState = {
-  ok: boolean;
+export type ActionResult = {
+  success: boolean;
   message: string;
+  data?: unknown;
 };
 
-export const emptyActionState: ActionState = { ok: false, message: "" };
+export type ActionState = ActionResult;
+
+export const emptyActionState: ActionState = { success: false, message: "" };

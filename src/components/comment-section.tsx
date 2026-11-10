@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { addComment } from "@/server/listing-actions";
+import { addComment } from "@/app/actions/comment";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { emptyActionState } from "@/lib/action-state";
@@ -58,7 +58,7 @@ export function CommentSection({
             placeholder="Durumu, teslim yerini veya takas beklentisini sor"
           />
           {state.message ? (
-            <p className={state.ok ? "text-sm text-emerald-700" : "text-sm text-red-700"}>
+            <p className={state.success ? "text-sm text-emerald-700" : "text-sm text-red-700"}>
               {state.message}
             </p>
           ) : null}

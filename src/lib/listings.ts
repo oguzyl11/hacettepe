@@ -16,6 +16,7 @@ export type ListingOwner = {
   email: string;
   instagramHandle: string | null;
   preferredContact: User["preferredContact"];
+  image?: string | null;
 };
 
 export type Listing = {
@@ -65,6 +66,7 @@ function toListing(item: ItemWithOwner): Listing {
       email: item.owner.email,
       instagramHandle: item.owner.instagramHandle,
       preferredContact: item.owner.preferredContact,
+      image: item.owner.image,
     },
     comments,
   };

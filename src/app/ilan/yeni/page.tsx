@@ -38,7 +38,7 @@ async function NewListingBody() {
     <div>
       <p className="text-sm font-semibold text-primary">Yeni ilan</p>
       <h1 className="mt-1 font-display text-3xl font-bold">Yeni takas ilanı oluştur</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Başlık, kategori, durum ve açıklama yeter. Fotoğraf alanı Blob için hazır.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Başlık, kategori, durum, açıklama ve en fazla dört fotoğraf.</p>
       <div className="mt-6">
         <ListingForm databaseReady={Boolean(getPrisma())} />
       </div>

@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { ContactMethod } from "@prisma/client";
-import { updateProfile } from "@/server/listing-actions";
+import { updateProfile } from "@/app/actions/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,12 +14,14 @@ export function ProfileForm({
   email,
   instagramHandle,
   preferredContact,
+  image,
   databaseReady,
 }: {
   name: string;
   email: string;
   instagramHandle: string;
   preferredContact: ContactMethod;
+  image: string | null;
   databaseReady: boolean;
 }) {
   const [state, action, pending] = useActionState(
@@ -36,6 +38,20 @@ export function ProfileForm({
       <div className="space-y-2">
         <Label htmlFor="email">Hacettepe e-postası</Label>
         <Input id="email" value={email} readOnly />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="avatar">Profil fotoğrafı</Label>
+        {image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={image} alt="" className="size-16 rounded-2xl object-cover" />
+        ) : null}
+        <input
+          id="avatar"
+          name="avatar"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-secondary file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white"
+        />
       </div>
       <div className="space-y-2">
         <Label htmlFor="instagramHandle">Instagram</Label>
@@ -68,7 +84,7 @@ export function ProfileForm({
       {state.message ? (
         <p
           className={
-            state.ok ? "text-sm text-emerald-700" : "text-sm text-red-700"
+            state.success ? "text-sm text-emerald-700" : "text-sm text-red-700"
           }
         >
           {state.message}

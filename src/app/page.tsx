@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { BadgeCheck, BookOpen, MapPin, Repeat } from "lucide-react";
+import { BadgeCheck, BookOpen } from "lucide-react";
+import { InstagramMark } from "@/components/instagram-mark";
 import { ItemCatalog } from "@/components/item-catalog";
 
 export default function Home({
@@ -21,8 +22,7 @@ export default function Home({
               Hacettepe&apos;de Takas Vakti
             </h1>
             <p className="mt-3 max-w-lg text-sm leading-6 text-white/85">
-              Kitap, elektronik ve yurt eşyalarını kampüsteki öğrencilerle değiştir.
-              Beytepe ve Sıhhiye arasında güvenli takas.
+              Eşyalar vitrinde durur. Beğendiğin ilanın sahibine Instagram’dan yazarsın.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link href="/#ilanlar" className="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-primary">
@@ -35,7 +35,7 @@ export default function Home({
           </div>
           <div className="hidden items-end justify-end md:flex">
             <div className="w-full max-w-sm rounded-xl bg-white/10 p-4 text-sm">
-              Beytepe Kütüphane, Mühendislik ve Sıhhiye buluşma noktaları.
+              Beğendiğin eşyanın sahibine ilandaki Instagram hesabından yaz.
             </div>
           </div>
         </div>
@@ -49,12 +49,11 @@ export default function Home({
 
       <section className="mt-14">
         <h2 className="text-center text-2xl font-bold">Nasıl çalışır?</h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-4">
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
           {[
-            { icon: BookOpen, title: "İlanını oluştur", text: "Eşyanı, durumunu ve ne aradığını yaz." },
-            { icon: Repeat, title: "Teklif gönder", text: "Karşılığında kendi ilanını veya bir not öner." },
-            { icon: MapPin, title: "Kampüste buluş", text: "Beytepe veya Sıhhiye'de güvenli bir nokta seç." },
-            { icon: BadgeCheck, title: "Takası tamamla", text: "Yalnızca doğrulanmış öğrenci hesapları katılır." },
+            { icon: BookOpen, title: "İlanını as", text: "Fotoğraf, durum ve açıklama yeter." },
+            { icon: BadgeCheck, title: "Vitrinde kalsın", text: "Kampüsteki öğrenciler ilanı görür." },
+            { icon: InstagramMark, title: "Instagram’dan yaz", text: "Anlaşma ilanın sahibinin hesabında yürür." },
           ].map((step, index) => (
             <article key={step.title} className="rounded-xl border border-border bg-card p-4">
               <span className="grid size-8 place-items-center rounded-full bg-primary text-sm font-bold text-white">
