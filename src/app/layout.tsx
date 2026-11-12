@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { LanguageProvider } from "@/lib/i18n/context";
+import { getServerLocale } from "@/lib/i18n/server";
 import "./globals.css";
 
 const inter = Inter({
@@ -15,17 +17,28 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Hacettepe Takas",
-  description: "Hacettepe öğrencileri için kampüs içi takas platformu.",
+  title: "Hacettepe Takas | Campus Barter",
+  description: "Hacettepe öğrencileri için kampüs içi takas platformu. Campus barter platform for Hacettepe students.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const locale = await getServerLocale();
+
   return (
-    <html lang="tr" className={`${inter.variable} ${jakarta.variable} h-full antialiased`}>
+    <html
+      lang={locale}
+      className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <LanguageProvider initialLocale={locale}>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </LanguageProvider>
       </body>
     </html>
   );

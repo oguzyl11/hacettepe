@@ -6,11 +6,14 @@ import { ProfileScreen } from "@/components/profile-screen";
 import { SignInPrompt } from "@/components/sign-in-prompt";
 import { getMyListings } from "@/lib/activity";
 import { getPrisma } from "@/lib/prisma";
+import { getServerDictionary } from "@/lib/i18n/server";
 
 export default function ProfilePage() {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6">
-      <Suspense fallback={<div className="h-80 animate-pulse rounded-full bg-muted" />}>
+      <Suspense
+        fallback={<div className="h-80 animate-pulse rounded-full bg-muted" />}
+      >
         <ProfileBody />
       </Suspense>
     </main>
@@ -19,23 +22,39 @@ export default function ProfilePage() {
 
 async function ProfileBody() {
   await connection();
-  const session = await auth();
+  const [session, { locale }] = await Promise.all([
+    auth(),
+    getServerDictionary(),
+  ]);
+
   if (!session?.user?.email || !session.user.id) {
-    return <SignInPrompt title="Profilin için giriş yap" next="/profil" />;
+    return (
+      <SignInPrompt
+        title={
+          locale === "tr"
+            ? "Profilin için giriş yap"
+            : "Sign in to view your profile"
+        }
+        next="/profil"
+      />
+    );
   }
 
   const prisma = getPrisma();
   let user = null;
   if (prisma) {
     try {
-      user = await prisma.user.findUnique({ where: { email: session.user.email } });
+      user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
     } catch (error) {
       console.error(error);
     }
   }
 
   const listings = await getMyListings(session.user.id);
-  const name = user?.name ?? session.user.name ?? "Öğrenci";
+  const defaultName = locale === "tr" ? "Öğrenci" : "Student";
+  const name = user?.name ?? session.user.name ?? defaultName;
 
   return (
     <ProfileScreen

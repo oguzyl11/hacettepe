@@ -1,0 +1,153 @@
+export type Locale = "tr" | "en";
+
+export type Dictionary = {
+  common: {
+    siteName: string;
+    siteTagline: string;
+    campusBadge: string;
+    nav: {
+      showcase: string;
+      newListing: string;
+      myListings: string;
+      settings: string;
+      profile: string;
+      signIn: string;
+    };
+    searchPlaceholder: string;
+    clear: string;
+    save: string;
+    saving: string;
+    cancel: string;
+    edit: string;
+    delete: string;
+    back: string;
+    location: string;
+    date: string;
+    all: string;
+  };
+  home: {
+    heroBadge: string;
+    heroTitle: string;
+    heroDescription: string;
+    browseListings: string;
+    postListing: string;
+    heroHint: string;
+    howItWorks: string;
+    step1Title: string;
+    step1Desc: string;
+    step2Title: string;
+    step2Desc: string;
+    step3Title: string;
+    step3Desc: string;
+  };
+  catalog: {
+    filters: string;
+    category: string;
+    condition: string;
+    contact: string;
+    all: string;
+    listingsCount: string;
+    noListings: string;
+    searchResult: string;
+    noSearchResults: string;
+    clearSearch: string;
+    orBrowseCategories: string;
+  };
+  search: {
+    categoriesHeader: string;
+    listingsHeader: string;
+    matchesCount: string;
+    searchInCategory: string;
+    noResultsFound: string;
+    noResultsHint: string;
+    seeAllResults: string;
+    popularSearches: string;
+    quickCategories: string;
+    clearSearch: string;
+  };
+  settings: {
+    title: string;
+    description: string;
+    languageTitle: string;
+    languageDesc: string;
+    turkish: string;
+    english: string;
+    turkishDesc: string;
+    englishDesc: string;
+    currentLanguage: string;
+    languageChanged: string;
+    accountTitle: string;
+    accountDesc: string;
+    goToProfile: string;
+    backToHome: string;
+  };
+  profile: {
+    title: string;
+    editProfile: string;
+    name: string;
+    email: string;
+    hacettepeEmail: string;
+    avatar: string;
+    changeAvatar: string;
+    instagram: string;
+    preferredContact: string;
+    saveProfile: string;
+    listings: string;
+    noListingsYet: string;
+    signInForProfile: string;
+    dbNotReady: string;
+    settingsLink: string;
+  };
+  itemDetail: {
+    backToShowcase: string;
+    listingDesc: string;
+    owner: string;
+    preferredContact: string;
+    instagramAccount: string;
+    comments: string;
+    writeComment: string;
+    sendComment: string;
+    noComments: string;
+    signInToComment: string;
+    commentPlaceholder: string;
+  };
+  newListing: {
+    title: string;
+    photos: string;
+    photoHint: string;
+    itemInfo: string;
+    itemTitle: string;
+    itemDesc: string;
+    publish: string;
+    category: string;
+    condition: string;
+    titlePlaceholder: string;
+    descPlaceholder: string;
+  };
+  myListings: {
+    title: string;
+    description: string;
+    empty: string;
+    createFirst: string;
+  };
+  auth: {
+    signInTitle: string;
+    signInPrompt: string;
+    onlyHacettepe: string;
+    googleSignIn: string;
+    emailSignIn: string;
+    sendLink: string;
+    emailLabel: string;
+  };
+  footer: {
+    campusBarter: string;
+    campuses: string;
+    quickAccess: string;
+    allListings: string;
+    shareListing: string;
+    verification: string;
+    verificationText: string;
+    studentToStudent: string;
+    language: string;
+  };
+};
