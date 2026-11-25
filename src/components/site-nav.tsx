@@ -20,7 +20,7 @@ function CategoryStrip() {
   const pathname = usePathname();
   const params = useSearchParams();
   const { locale, t } = useTranslation();
-  if (pathname === "/ilan/yeni") return null;
+  if (pathname.startsWith("/ilan/")) return null;
   const activeCategory = pathname === "/" ? params.get("kategori") : null;
   const myListings = pathname === "/ilanlarim";
 
