@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
+import { SiteFrame } from "@/components/site-frame";
 import { SiteHeader } from "@/components/site-header";
 import { LanguageProvider } from "@/lib/i18n/context";
 import { getServerLocale } from "@/lib/i18n/server";
@@ -41,9 +42,9 @@ export default async function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <LanguageProvider initialLocale={locale}>
-          <SiteHeader />
-          {children}
-          <SiteFooter />
+          <SiteFrame header={<SiteHeader />} footer={<SiteFooter />}>
+            {children}
+          </SiteFrame>
         </LanguageProvider>
       </body>
     </html>

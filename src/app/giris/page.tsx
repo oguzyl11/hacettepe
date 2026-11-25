@@ -1,41 +1,54 @@
 import { Suspense } from "react";
-import { authProviders } from "@/auth";
-import { SignInForm } from "@/components/sign-in-form";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { safeRedirectPath } from "@/lib/utils";
+import { ShieldCheck } from "lucide-react";
+import { AuthSecurityNote, SignInForm } from "@/components/sign-in-form";
 import { TepeliLogo } from "@/components/tepeli-logo";
 import { getServerDictionary } from "@/lib/i18n/server";
+import { safeRedirectPath } from "@/lib/utils";
 
 export default async function SignInPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; donus?: string }>;
 }) {
-  const { t, locale } = await getServerDictionary();
+  const { t } = await getServerDictionary();
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 px-4 py-12 sm:px-6">
-      <Card className="w-full">
-        <CardHeader>
-          <TepeliLogo markClassName="size-10" wordClassName="text-2xl" />
-          <h1 className="mt-1 text-2xl font-semibold">
-            {locale === "tr" ? "Öğrenci girişi" : "Student Sign In"}
-          </h1>
-          <p className="mt-2 rounded-lg bg-secondary/10 px-3 py-2 text-sm font-medium text-secondary">
-            {t.auth.onlyHacettepe}
-          </p>
-        </CardHeader>
-        <CardContent>
-          <Suspense
-            fallback={
-              <div className="h-48 animate-pulse rounded-2xl bg-muted" />
-            }
-          >
+    <main className="flex flex-1 items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="rounded-xl bg-white p-5 shadow-xl md:p-8">
+          <div className="mb-5 flex flex-col items-center text-center">
+            <TepeliLogo markClassName="size-10" wordClassName="text-4xl" />
+            <p className="mt-2 max-w-xs text-xs text-[#59413e]">{t.auth.tagline}</p>
+          </div>
+          <div className="mb-5 flex items-start gap-2 rounded-lg bg-[#dce9ff] p-3 shadow-sm">
+            <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#991b1b]" />
+            <div className="text-left">
+              <p className="text-xs font-semibold text-[#0b1c30]">{t.auth.secureTitle}</p>
+              <p className="text-xs leading-snug text-[#59413e]">
+                <SecureCopy text={t.auth.secureText} />
+              </p>
+            </div>
+          </div>
+          <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-[#eff4ff]" />}>
             <SignInBody searchParams={searchParams} />
           </Suspense>
-        </CardContent>
-      </Card>
+          <AuthSecurityNote />
+        </div>
+      </div>
     </main>
+  );
+}
+
+function SecureCopy({ text }: { text: string }) {
+  const token = "@hacettepe.edu.tr";
+  const [before, after] = text.split(token);
+  if (after === undefined) return text;
+  return (
+    <>
+      {before}
+      <strong className="font-semibold text-[#991b1b]">{token}</strong>
+      {after}
+    </>
   );
 }
 
@@ -49,8 +62,6 @@ async function SignInBody({
     <SignInForm
       callbackPath={safeRedirectPath(params.donus)}
       error={params.error}
-      googleEnabled={authProviders.google}
-      emailEnabled={authProviders.email}
       devLogin={
         process.env.NODE_ENV === "development" && process.env.ALLOW_DEV_LOGIN === "true"
       }
