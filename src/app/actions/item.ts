@@ -1,11 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { localizePath } from "@/lib/locale";
+import { revalidateLocalized } from "@/lib/revalidate-localized";
 import { redirect } from "next/navigation";
 import type { ActionResult } from "@/lib/action-state";
 import { imageFiles, removeStoredImages, uploadImages } from "@/lib/blob";
 import { currentStudent } from "@/lib/current-student";
-import { getServerDictionary } from "@/lib/i18n/server";
+import { getServerDictionary, getServerLocale } from "@/lib/i18n/server";
 import { logger } from "@/lib/logger";
 import { getPrisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
@@ -21,7 +22,7 @@ export async function createItem(
   _previous: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
-  const { t } = await getServerDictionary();
+  const { t, locale } = await getServerDictionary();
   const student = await currentStudent();
   if (!student) return { success: false, message: t.errors.signIn };
 
@@ -59,9 +60,8 @@ export async function createItem(
     return { success: false, message: t.errors.listingSaved };
   }
 
-  revalidatePath("/");
-  revalidatePath("/ilanlarim");
-  redirect(`/ilan/${itemId}`);
+  revalidateLocalized(["/", "/ilanlarim", `/ilan/${itemId}`]);
+  redirect(localizePath(locale, `/ilan/${itemId}`));
 }
 
 export async function deleteItem(formData: FormData): Promise<void> {
@@ -106,8 +106,6 @@ export async function deleteItem(formData: FormData): Promise<void> {
     return;
   }
 
-  revalidatePath("/");
-  revalidatePath("/ilanlarim");
-  revalidatePath(`/profil/${student.id}`);
-  redirect("/ilanlarim");
+  revalidateLocalized(["/", "/ilanlarim", `/profil/${student.id}`]);
+  redirect(localizePath(await getServerLocale(), "/ilanlarim"));
 }

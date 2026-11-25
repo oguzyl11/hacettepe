@@ -11,4 +11,11 @@ export function assertProductionSecret() {
   if (knownSecrets.has(secret)) {
     throw new Error("Set a unique AUTH_SECRET before starting production.");
   }
+  const databaseUrl = process.env.DATABASE_URL ?? "";
+  if (databaseUrl.includes("dev-only-change-me") || databaseUrl.includes("dev-hacettepe-takas-local-docker")) {
+    throw new Error("Set a unique database password before starting production.");
+  }
+  if (process.env.ALLOW_DEV_LOGIN === "true") {
+    throw new Error("ALLOW_DEV_LOGIN must be off in production.");
+  }
 }

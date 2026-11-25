@@ -1,11 +1,12 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { BadgeCheck, Home, PlusCircle, Zap } from "lucide-react";
 import { connection } from "next/server";
 import { ListingForm } from "@/components/listing-form";
 import { currentStudent } from "@/lib/current-student";
 import { getPrisma } from "@/lib/prisma";
 import { getServerDictionary } from "@/lib/i18n/server";
+import { signInHref } from "@/lib/locale";
 
 export default function NewListingPage() {
   return (
@@ -19,7 +20,7 @@ export default function NewListingPage() {
 
 async function NewListingBody() {
   await connection();
-  const [student, { t }] = await Promise.all([
+  const [student, { t, locale }] = await Promise.all([
     currentStudent(),
     getServerDictionary(),
   ]);
@@ -30,7 +31,7 @@ async function NewListingBody() {
         <div className="rounded-xl bg-white p-6 shadow-sm">
           <h1 className="text-2xl font-bold text-[#0b1c30]">{t.newListing.signInTitle}</h1>
           <Link
-            href="/giris?donus=/ilan/yeni"
+            href={signInHref(locale, "/ilan/yeni")}
             className="mt-4 inline-flex text-sm font-semibold text-[#991b1b] hover:underline"
           >
             {t.newListing.signInLink}

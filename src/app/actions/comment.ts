@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidateLocalized } from "@/lib/revalidate-localized";
 import { currentStudent } from "@/lib/current-student";
 import { logger } from "@/lib/logger";
 import { getPrisma } from "@/lib/prisma";
@@ -39,7 +39,7 @@ export async function addComment(formData: FormData): Promise<void> {
     await prisma.comment.create({
       data: { body: parsed.data.text, itemId, authorId: student.id },
     });
-    revalidatePath(`/ilan/${itemId}`);
+    revalidateLocalized([`/ilan/${itemId}`]);
   } catch (error) {
     logger.error("message.create", error);
   }
@@ -60,7 +60,7 @@ export async function deleteComment(formData: FormData): Promise<void> {
     });
     if (!comment || comment.itemId !== itemId || comment.authorId !== student.id) return;
     await prisma.comment.delete({ where: { id: comment.id } });
-    revalidatePath(`/ilan/${itemId}`);
+    revalidateLocalized([`/ilan/${itemId}`]);
   } catch (error) {
     logger.error("message.delete", error);
   }

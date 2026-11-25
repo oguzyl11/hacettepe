@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteFrame } from "@/components/site-frame";
-import { SiteHeader } from "@/components/site-header";
+import { notFound } from "next/navigation";
 import { LanguageProvider } from "@/lib/i18n/context";
-import { getServerLocale } from "@/lib/i18n/server";
+import { dictionaryFor } from "@/lib/i18n/server";
+import { isLocale } from "@/lib/locale";
 import { assertProductionSecret } from "@/lib/secrets";
-import "./globals.css";
-
-export const instant = false;
+import "../globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,13 +24,21 @@ export const metadata: Metadata = {
   icons: { icon: "/tepeli-mark.svg" },
 };
 
+export function generateStaticParams() {
+  return [{ locale: "tr" }, { locale: "en" }];
+}
+
 export default async function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
   assertProductionSecret();
-  const locale = await getServerLocale();
+  const { locale: raw } = await params;
+  if (!isLocale(raw)) notFound();
+  const { locale } = dictionaryFor(raw);
 
   return (
     <html
@@ -41,11 +46,7 @@ export default async function RootLayout({
       className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
-        <LanguageProvider initialLocale={locale}>
-          <SiteFrame header={<SiteHeader />} footer={<SiteFooter />}>
-            {children}
-          </SiteFrame>
-        </LanguageProvider>
+        <LanguageProvider initialLocale={locale}>{children}</LanguageProvider>
       </body>
     </html>
   );

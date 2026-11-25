@@ -23,7 +23,7 @@ export default function PublicProfilePage({
 async function PublicBody({ params }: { params: Promise<{ id: string }> }) {
   await connection();
   const { id } = await params;
-  const [{ profile, unavailable }, { locale, t }] = await Promise.all([
+  const [{ profile, unavailable }, { t }] = await Promise.all([
     getPublicProfile(id),
     getServerDictionary(),
   ]);
@@ -35,7 +35,7 @@ async function PublicBody({ params }: { params: Promise<{ id: string }> }) {
     );
   }
   if (!profile) notFound();
-  const defaultName = locale === "tr" ? "Öğrenci" : "Student";
+  const defaultName = t.common.studentName;
 
   return (
     <ProfileScreen

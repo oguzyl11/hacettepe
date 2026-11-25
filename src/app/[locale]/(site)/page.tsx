@@ -1,20 +1,23 @@
 import { Suspense } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { ArrowRight, BadgeCheck, BookOpen, Plus, ShieldCheck } from "lucide-react";
 import { InstagramMark } from "@/components/instagram-mark";
 import { ItemCatalog } from "@/components/item-catalog";
-import { categories, getCategoryLabel } from "@/lib/labels";
+import { categories, getCategoryLabel, isItemCategory } from "@/lib/labels";
 import { getRecentListings } from "@/lib/listings";
-import { getServerDictionary } from "@/lib/i18n/server";
+import { dictionaryFor } from "@/lib/i18n/server";
+import { isLocale } from "@/lib/locale";
 import type { Dictionary, Locale } from "@/lib/i18n/types";
 import { formatDate } from "@/lib/utils";
 
 const heroCategories = 4;
 
 export default async function Home({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{
     kategori?: string;
     durum?: string;
@@ -22,7 +25,9 @@ export default async function Home({
     sayfa?: string;
   }>;
 }) {
-  const { locale, t } = await getServerDictionary();
+  const { locale: raw } = await params;
+  const locale = isLocale(raw) ? raw : "tr";
+  const { t } = dictionaryFor(locale);
 
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 pb-10 sm:px-6">
@@ -58,23 +63,21 @@ export default async function Home({
               </Link>
             </div>
           </div>
-          <div className="relative z-10 grid grid-cols-2 gap-2 border-t border-white/15 pt-3 text-[11px] sm:grid-cols-4">
-            {categories.slice(0, heroCategories).map((category, index) => (
-              <Link
-                key={category}
-                href={`/?kategori=${category}#ilanlar`}
-                className={
-                  index === 0
-                    ? "truncate rounded-lg border border-white/30 bg-white/20 p-1.5 font-bold"
-                    : "truncate rounded-lg bg-black/15 p-1.5 text-white/80 hover:bg-white/10"
-                }
-              >
-                {index + 1}. {getCategoryLabel(category, locale)}
-              </Link>
-            ))}
-          </div>
+          <Suspense
+            fallback={
+              <div className="relative z-10 grid grid-cols-2 gap-2 border-t border-white/15 pt-3 sm:grid-cols-4">
+                {categories.slice(0, heroCategories).map((category) => (
+                  <div key={category} className="h-8 rounded-lg bg-black/15" />
+                ))}
+              </div>
+            }
+          >
+            <HeroCategories locale={locale} searchParams={searchParams} />
+          </Suspense>
         </div>
-        <RecentShowcase locale={locale} t={t} />
+        <Suspense fallback={<div className="min-h-[340px] rounded-2xl bg-white md:col-span-4" />}>
+          <RecentShowcase locale={locale} t={t} />
+        </Suspense>
       </section>
 
       <div id="ilanlar" className="py-6">
@@ -115,6 +118,40 @@ export default async function Home({
         </div>
       </section>
     </main>
+  );
+}
+
+async function HeroCategories({
+  locale,
+  searchParams,
+}: {
+  locale: Locale;
+  searchParams: Promise<{ kategori?: string }>;
+}) {
+  const query = await searchParams;
+  const activeCategory =
+    query.kategori && isItemCategory(query.kategori) ? query.kategori : undefined;
+
+  return (
+    <div className="relative z-10 grid grid-cols-2 gap-2 border-t border-white/15 pt-3 text-[11px] sm:grid-cols-4">
+      {categories.slice(0, heroCategories).map((category, index) => {
+        const selected = activeCategory === category;
+        return (
+          <Link
+            key={category}
+            href={`/?kategori=${category}`}
+            aria-current={selected ? "true" : undefined}
+            className={
+              selected
+                ? "truncate rounded-lg border border-white/40 bg-white/25 p-1.5 font-bold text-white"
+                : "truncate rounded-lg bg-black/15 p-1.5 text-white/80 hover:bg-white/10"
+            }
+          >
+            {index + 1}. {getCategoryLabel(category, locale)}
+          </Link>
+        );
+      })}
+    </div>
   );
 }
 
@@ -166,7 +203,7 @@ async function RecentShowcase({
                   </span>
                   <span className="block text-[10px] text-slate-400">
                     {getCategoryLabel(listing.category, locale)} · {t.common.location} ·{" "}
-                    {formatDate(listing.createdAt)}
+                    {formatDate(listing.createdAt, locale)}
                     {listing.status === "SOLD" ? ` · ${t.itemDetail.sold}` : ""}
                   </span>
                 </span>

@@ -2,18 +2,22 @@ import { Suspense } from "react";
 import { ShieldCheck } from "lucide-react";
 import { AuthSecurityNote, SignInForm } from "@/components/sign-in-form";
 import { TepeliLogo } from "@/components/tepeli-logo";
-import { getServerDictionary } from "@/lib/i18n/server";
+import { dictionaryFor } from "@/lib/i18n/server";
+import { isLocale } from "@/lib/locale";
 import { safeRedirectPath } from "@/lib/utils";
 
 export default async function SignInPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ error?: string; donus?: string }>;
 }) {
-  const { t } = await getServerDictionary();
+  const { locale: raw } = await params;
+  const { t } = dictionaryFor(isLocale(raw) ? raw : "tr");
 
   return (
-    <main className="flex flex-1 items-center justify-center p-4">
+    <main className="flex min-h-full flex-1 items-center justify-center bg-[#f8f9ff] p-4">
       <div className="w-full max-w-md">
         <div className="rounded-xl bg-white p-5 shadow-xl md:p-8">
           <div className="mb-5 flex flex-col items-center text-center">

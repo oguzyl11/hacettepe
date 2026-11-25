@@ -21,7 +21,7 @@ export default function ProfilePage() {
 
 async function ProfileBody() {
   await connection();
-  const [student, { locale, t }] = await Promise.all([
+  const [student, { t }] = await Promise.all([
     currentStudent(),
     getServerDictionary(),
   ]);
@@ -52,7 +52,7 @@ async function ProfileBody() {
   }
 
   const { items, unavailable } = await getMyListings(student.id);
-  const defaultName = locale === "tr" ? "Öğrenci" : "Student";
+  const defaultName = t.common.studentName;
 
   return (
     <div className="space-y-4">

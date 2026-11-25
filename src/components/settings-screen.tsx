@@ -1,32 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
+import { LocaleSwitchLink } from "@/components/locale-switch-link";
 import {
   Globe,
   Check,
   User,
   ArrowRight,
   ShieldCheck,
-  CheckCircle2,
 } from "lucide-react";
 import { deleteAccount } from "@/app/actions/account";
 import { useLanguage } from "@/lib/i18n/context";
-import type { Locale } from "@/lib/i18n/types";
 import { cn } from "@/lib/utils";
 
 export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
-  const { locale, setLocale, t } = useLanguage();
-  const [justChanged, setJustChanged] = useState<string | null>(null);
-
-  const handleSelectLanguage = (newLocale: Locale) => {
-    if (newLocale === locale) return;
-    setLocale(newLocale);
-    setJustChanged(newLocale);
-    setTimeout(() => {
-      setJustChanged(null);
-    }, 3000);
-  };
+  const { locale, t } = useLanguage();
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8">
@@ -39,17 +27,6 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
           {t.settings.description}
         </p>
       </div>
-
-      {justChanged && (
-        <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 p-3 text-sm font-medium text-emerald-800 border border-emerald-500/20 animate-in fade-in">
-          <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
-          <span>
-            {locale === "tr"
-              ? "Dil Türkçe olarak ayarlandı."
-              : "Language set to English."}
-          </span>
-        </div>
-      )}
 
       {/* Language Section */}
       <section className="rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-xs">
@@ -69,9 +46,8 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           {/* Turkish Option */}
-          <button
-            type="button"
-            onClick={() => handleSelectLanguage("tr")}
+          <LocaleSwitchLink
+            locale="tr"
             className={cn(
               "relative flex items-center justify-between rounded-xl border p-4 text-left transition-all",
               locale === "tr"
@@ -97,12 +73,11 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
                 <Check className="size-3.5 stroke-[3]" />
               </span>
             )}
-          </button>
+          </LocaleSwitchLink>
 
           {/* English Option */}
-          <button
-            type="button"
-            onClick={() => handleSelectLanguage("en")}
+          <LocaleSwitchLink
+            locale="en"
             className={cn(
               "relative flex items-center justify-between rounded-xl border p-4 text-left transition-all",
               locale === "en"
@@ -128,7 +103,7 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
                 <Check className="size-3.5 stroke-[3]" />
               </span>
             )}
-          </button>
+          </LocaleSwitchLink>
         </div>
       </section>
 
@@ -166,14 +141,10 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
           <ShieldCheck className="size-5 text-institution-blue shrink-0 mt-0.5" />
           <div className="text-xs leading-5 text-muted-foreground">
             <p className="font-semibold text-foreground">
-              {locale === "tr"
-                ? "Hacettepe Üniversitesi Doğrulaması"
-                : "Hacettepe University Verification"}
+              {t.settings.verificationTitle}
             </p>
             <p className="mt-0.5">
-              {locale === "tr"
-                ? "Platformdaki tüm işlemler yalnızca onaylanmış @hacettepe.edu.tr e-posta adresine sahip öğrenciler arasında gerçekleşir."
-                : "All operations on the platform are conducted exclusively between students with verified @hacettepe.edu.tr email addresses."}
+              {t.settings.verificationText}
             </p>
           </div>
         </div>

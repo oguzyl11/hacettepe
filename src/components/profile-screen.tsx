@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
+import { LocaleSwitchLink } from "@/components/locale-switch-link";
 import { ContactMethod } from "@prisma/client";
 import { updateProfile } from "@/app/actions/user";
 import { ListingPortfolio, type PortfolioItem } from "@/components/listing-portfolio";
@@ -36,7 +37,7 @@ export function ProfileScreen({
   posts: PortfolioItem[];
   showEmail: boolean;
 }) {
-  const { t, locale, setLocale } = useTranslation();
+  const { t, locale } = useTranslation();
   const [state, action, pending] = useActionState(updateProfile, emptyActionState);
   const [editing, setEditing] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -143,37 +144,31 @@ export function ProfileScreen({
                       className="peer sr-only"
                     />
                     <span className="inline-flex rounded-lg border border-border px-3 py-1.5 text-sm font-semibold peer-checked:bg-primary peer-checked:text-white">
-                      {method === ContactMethod.EMAIL
-                        ? locale === "tr"
-                          ? "E-posta"
-                          : "Email"
-                        : "Instagram"}
+                      {method === ContactMethod.EMAIL ? t.profile.email : "Instagram"}
                     </span>
                   </label>
                 ))}
               </div>
             </fieldset>
             <div className="flex gap-2 sm:col-span-2">
-              <button
-                type="button"
-                onClick={() => setLocale("tr")}
+              <LocaleSwitchLink
+                locale="tr"
                 className={cn(
                   "rounded-lg px-3 py-1.5 text-sm font-semibold",
                   locale === "tr" ? "bg-primary text-white" : "border border-border",
                 )}
               >
-                Türkçe
-              </button>
-              <button
-                type="button"
-                onClick={() => setLocale("en")}
+                {t.settings.turkish}
+              </LocaleSwitchLink>
+              <LocaleSwitchLink
+                locale="en"
                 className={cn(
                   "rounded-lg px-3 py-1.5 text-sm font-semibold",
                   locale === "en" ? "bg-primary text-white" : "border border-border",
                 )}
               >
-                English
-              </button>
+                {t.settings.english}
+              </LocaleSwitchLink>
             </div>
             {state.message ? (
               <p className={cn("text-sm sm:col-span-2", state.success ? "text-emerald-700" : "text-red-700")}>

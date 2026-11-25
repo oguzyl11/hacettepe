@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { connection } from "next/server";
 import { MessageCircle, Plus } from "lucide-react";
 import { DeleteListingForm } from "@/components/delete-listing-form";
@@ -30,7 +30,7 @@ async function ListingsBody() {
   if (!student) {
     return (
       <SignInPrompt
-        title={locale === "tr" ? "İlanların için giriş yap" : "Sign in to view your listings"}
+        title={t.myListings.signInTitle}
         next="/ilanlarim"
       />
     );
@@ -44,7 +44,7 @@ async function ListingsBody() {
         <div>
           <h1 className="font-display text-3xl font-bold">{t.myListings.title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {items.length} {locale === "tr" ? "yayındaki ilan" : "active listings"}
+            {t.myListings.activeCount.replace("{count}", String(items.length))}
           </p>
         </div>
         <Link
@@ -89,7 +89,7 @@ async function ListingsBody() {
                   <MessageCircle className="size-3.5" />
                   {item._count.comments}
                 </span>
-                <span className="ml-auto">{formatDate(item.createdAt.toISOString())}</span>
+                <span className="ml-auto">{formatDate(item.createdAt.toISOString(), locale)}</span>
               </div>
               <DeleteListingForm itemId={item.id} label={t.itemDetail.deleteListing} size="sm" />
             </article>

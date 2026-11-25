@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidateLocalized } from "@/lib/revalidate-localized";
 import { signOut } from "@/auth";
 import { removeStoredImages } from "@/lib/blob";
 import { currentStudent } from "@/lib/current-student";
@@ -48,6 +48,6 @@ export async function deleteAccount(formData: FormData): Promise<void> {
     return;
   }
 
-  revalidatePath("/");
+  revalidateLocalized(["/"]);
   await signOut({ redirectTo: "/" });
 }

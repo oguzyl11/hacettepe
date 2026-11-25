@@ -1,5 +1,5 @@
 import { Suspense, type ReactNode } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { BadgeCheck, ChevronRight, Library, MapPin, ShieldCheck, Star, Utensils } from "lucide-react";
@@ -69,7 +69,7 @@ async function ItemBody({ params }: { params: Promise<{ id: string }> }) {
   const facts = [
     { label: t.catalog.category, value: categoryLabel },
     { label: t.catalog.condition, value: conditionLabel },
-    { label: t.itemDetail.postedOn, value: formatDate(listing.createdAt) },
+    { label: t.itemDetail.postedOn, value: formatDate(listing.createdAt, locale) },
     {
       label: t.itemDetail.statusLabel,
       value: listing.status === "SOLD" ? t.itemDetail.sold : t.itemDetail.active,
@@ -93,7 +93,7 @@ async function ItemBody({ params }: { params: Promise<{ id: string }> }) {
           <span className="max-w-64 truncate text-[#0b1c30]">{listing.title}</span>
         </nav>
         <p className="text-xs text-[#8d706d]">
-          {t.itemDetail.listingNo} {listing.id.slice(-6).toLocaleUpperCase("tr")} · {formatDate(listing.createdAt)}
+          {t.itemDetail.listingNo} {listing.id.slice(-6).toLocaleUpperCase(locale)} · {formatDate(listing.createdAt, locale)}
         </p>
       </div>
 

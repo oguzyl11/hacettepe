@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidateLocalized } from "@/lib/revalidate-localized";
 import type { ActionResult } from "@/lib/action-state";
 import { imageFiles, removeStoredImages, uploadImages } from "@/lib/blob";
 import { currentStudent } from "@/lib/current-student";
@@ -49,9 +50,8 @@ export async function updateProfile(
     if (uploaded.urls[0] && existing?.image && existing.image !== uploaded.urls[0]) {
       await removeStoredImages([existing.image]);
     }
-    revalidatePath("/profil");
-    revalidatePath(`/profil/${student.id}`);
-    revalidatePath("/ilan/[id]", "page");
+    revalidateLocalized(["/profil", `/profil/${student.id}`]);
+    revalidatePath("/[locale]/ilan/[id]", "page");
     return {
       success: true,
       message: t.errors.profileSaved,

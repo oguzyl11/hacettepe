@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
+import { signInHref } from "@/lib/locale";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function SignInPrompt({
@@ -10,16 +11,16 @@ export function SignInPrompt({
   title: string;
   next: string;
 }) {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
 
   return (
     <div className="rounded-xl border border-border bg-card p-6">
       <h1 className="font-display text-2xl font-bold">{title}</h1>
       <Link
-        href={`/giris?donus=${next}`}
+        href={signInHref(locale, next)}
         className="mt-3 inline-block text-sm font-semibold text-primary hover:underline transition-colors"
       >
-        {locale === "tr" ? "Giriş sayfasına git" : "Go to sign-in page"}
+        {t.common.goToSignIn}
       </Link>
     </div>
   );

@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { stripLocalePrefix } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n/types";
 
 export function cn(...inputs: ClassValue[]) {
@@ -23,11 +22,9 @@ export function safeRedirectPath(path: string | undefined) {
   const beforeHash = hashIndex >= 0 ? path.slice(0, hashIndex) : path;
   const queryIndex = beforeHash.indexOf("?");
   const query = queryIndex >= 0 ? beforeHash.slice(queryIndex) : "";
-  const pathname = queryIndex >= 0 ? beforeHash.slice(0, queryIndex) : beforeHash;
-  const bare = stripLocalePrefix(pathname);
-  if (pathname.startsWith("/tr/") || pathname === "/tr") {
-    return `${bare}${query}${hash}`;
-  }
+  let pathname = queryIndex >= 0 ? beforeHash.slice(0, queryIndex) : beforeHash;
+  if (pathname === "/tr") pathname = "/";
+  else if (pathname.startsWith("/tr/")) pathname = pathname.slice(3);
   return `${pathname}${query}${hash}`;
 }
 

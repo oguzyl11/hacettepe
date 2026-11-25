@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidateLocalized } from "@/lib/revalidate-localized";
 import { currentStudent } from "@/lib/current-student";
 import { logger } from "@/lib/logger";
 import { getPrisma } from "@/lib/prisma";
@@ -69,9 +69,7 @@ export async function markSold(formData: FormData): Promise<void> {
       where: { id: student.id },
       data: { soldCount: { increment: 1 } },
     });
-    revalidatePath("/");
-    revalidatePath(`/ilan/${itemId}`);
-    revalidatePath(`/profil/${student.id}`);
+    revalidateLocalized(["/", `/ilan/${itemId}`, `/profil/${student.id}`]);
   } catch (error) {
     logger.error("listing.sell", error);
   }
@@ -126,9 +124,7 @@ export async function rateSeller(formData: FormData): Promise<void> {
         data: next,
       }),
     ]);
-    revalidatePath("/");
-    revalidatePath(`/ilan/${itemId}`);
-    revalidatePath(`/profil/${item.ownerId}`);
+    revalidateLocalized(["/", `/ilan/${itemId}`, `/profil/${item.ownerId}`]);
   } catch (error) {
     logger.error("listing.rate", error);
   }
