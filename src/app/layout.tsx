@@ -7,6 +7,8 @@ import { getServerLocale } from "@/lib/i18n/server";
 import { assertProductionSecret } from "@/lib/secrets";
 import "./globals.css";
 
+export const instant = false;
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],

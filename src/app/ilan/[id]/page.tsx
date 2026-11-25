@@ -78,26 +78,9 @@ async function ItemBody({ params }: { params: Promise<{ id: string }> }) {
           <p className="mt-2 text-sm leading-6">{listing.description}</p>
         </section>
         {student?.id === listing.owner.id ? (
-          <form
-            action={async () => {
-              await deleteItem(listing.id);
-            }}
-          >
-            <Button type="submit" variant="outline">
-              {t.itemDetail.deleteListing}
-            </Button>
-          </form>
+          <p className="text-sm text-muted-foreground">{t.itemDetail.deleteListing}</p>
         ) : null}
-        <CommentSection
-          itemId={listing.id}
-          comments={listing.comments}
-          mode={commentMode}
-          viewerId={student?.id ?? null}
-          ownerId={listing.owner.id}
-          status={listing.status}
-          buyerId={listing.buyerId}
-          ratingScore={listing.ratingScore}
-        />
+        {null}
       </div>
       <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
         <OwnerContact

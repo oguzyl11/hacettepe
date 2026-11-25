@@ -64,20 +64,20 @@ export async function createItem(
   redirect(`/ilan/${itemId}`);
 }
 
-export async function deleteItem(itemId: string): Promise<ActionResult> {
-  const { t } = await getServerDictionary();
+export async function deleteItem(formData: FormData): Promise<void> {
+  const rawId = formData.get("itemId");
+  const itemId = typeof rawId === "string" && /^[a-z0-9]{8,40}$/i.test(rawId) ? rawId : null;
   const student = await currentStudent();
-  if (!student) return { success: false, message: t.errors.signIn };
+  if (!student || !itemId) return;
   const prisma = getPrisma();
-  if (!prisma) return { success: false, message: t.errors.database };
+  if (!prisma) return;
 
   try {
     const item = await prisma.item.findUnique({
       where: { id: itemId },
       select: { id: true, ownerId: true, status: true, images: true, rating: { select: { id: true } } },
     });
-    if (!item) return { success: false, message: t.errors.notFound };
-    if (item.ownerId !== student.id) return { success: false, message: t.errors.forbidden };
+    if (!item || item.ownerId !== student.id) return;
 
     await prisma.item.delete({ where: { id: item.id } });
     if (item.status === "SOLD") {
@@ -103,7 +103,7 @@ export async function deleteItem(itemId: string): Promise<ActionResult> {
     await removeStoredImages(item.images);
   } catch (error) {
     logger.error("listing.delete", error);
-    return { success: false, message: t.errors.unavailable };
+    return;
   }
 
   revalidatePath("/");

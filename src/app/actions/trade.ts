@@ -28,12 +28,19 @@ async function refreshSeller(sellerId: string) {
   });
 }
 
-export async function markSold(itemId: string, buyerId: string): Promise<ActionResult> {
-  const { t } = await getServerDictionary();
+function formId(formData: FormData, key: string) {
+  const value = formData.get(key);
+  if (typeof value !== "string" || !/^[a-z0-9]{8,40}$/i.test(value)) return null;
+  return value;
+}
+
+export async function markSold(formData: FormData): Promise<void> {
+  const itemId = formId(formData, "itemId");
+  const buyerId = formId(formData, "buyerId");
   const student = await currentStudent();
-  if (!student) return { success: false, message: t.errors.signIn };
+  if (!student || !itemId || !buyerId) return;
   const prisma = getPrisma();
-  if (!prisma) return { success: false, message: t.errors.database };
+  if (!prisma) return;
 
   try {
     const item = await prisma.item.findUnique({
@@ -45,7 +52,7 @@ export async function markSold(itemId: string, buyerId: string): Promise<ActionR
         comments: { select: { authorId: true } },
       },
     });
-    if (!item) return { success: false, message: t.errors.notFound };
+    if (!item) return;
     const allowed = canMarkSold({
       actorId: student.id,
       ownerId: item.ownerId,
@@ -53,13 +60,13 @@ export async function markSold(itemId: string, buyerId: string): Promise<ActionR
       status: item.status,
       commenterIds: item.comments.map((comment) => comment.authorId),
     });
-    if (!allowed) return { success: false, message: t.errors.forbidden };
+    if (!allowed) return;
 
     const updated = await prisma.item.updateMany({
       where: { id: itemId, ownerId: student.id, status: "ACTIVE" },
       data: { status: "SOLD", buyerId, soldAt: new Date() },
     });
-    if (updated.count !== 1) return { success: false, message: t.errors.unavailable };
+    if (updated.count !== 1) return;
     await prisma.user.update({
       where: { id: student.id },
       data: { soldCount: { increment: 1 } },
@@ -67,15 +74,12 @@ export async function markSold(itemId: string, buyerId: string): Promise<ActionR
     revalidatePath("/");
     revalidatePath(`/ilan/${itemId}`);
     revalidatePath(`/profil/${student.id}`);
-    return { success: true, message: t.errors.sold };
   } catch (error) {
     logger.error("listing.sell", error);
-    return { success: false, message: t.errors.unavailable };
   }
 }
 
 export async function rateSeller(
-  itemId: string,
   _previous: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
@@ -85,8 +89,9 @@ export async function rateSeller(
   const prisma = getPrisma();
   if (!prisma) return { success: false, message: t.errors.database };
 
+  const itemId = formId(formData, "itemId");
   const parsed = scoreSchema.safeParse(formData.get("score"));
-  if (!parsed.success) return { success: false, message: t.errors.invalid };
+  if (!itemId || !parsed.success) return { success: false, message: t.errors.invalid };
 
   try {
     const item = await prisma.item.findUnique({

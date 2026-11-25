@@ -31,14 +31,8 @@ export function CommentSection({
   ratingScore: number | null;
 }) {
   const { t } = useTranslation();
-  const [state, action, pending] = useActionState(
-    addComment.bind(null, itemId),
-    emptyActionState,
-  );
-  const [ratingState, rateAction, ratingPending] = useActionState(
-    rateSeller.bind(null, itemId),
-    emptyActionState,
-  );
+  const [state, action, pending] = useActionState(addComment, emptyActionState);
+  const [ratingState, rateAction, ratingPending] = useActionState(rateSeller, emptyActionState);
   const canSell = viewerId === ownerId && status === "ACTIVE";
   const canRate = viewerId !== null && viewerId === buyerId && status === "SOLD" && ratingScore === null;
 
@@ -60,22 +54,18 @@ export function CommentSection({
               <p className="mt-1 text-sm leading-6">{comment.body}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {canSell && comment.authorId !== ownerId ? (
-                  <form
-                    action={async () => {
-                      await markSold(itemId, comment.authorId);
-                    }}
-                  >
+                  <form action={markSold}>
+                    <input type="hidden" name="itemId" value={itemId} />
+                    <input type="hidden" name="buyerId" value={comment.authorId} />
                     <Button type="submit" size="sm">
                       {t.itemDetail.markSold}
                     </Button>
                   </form>
                 ) : null}
                 {viewerId === comment.authorId ? (
-                  <form
-                    action={async () => {
-                      await deleteComment(comment.id, itemId);
-                    }}
-                  >
+                  <form action={deleteComment}>
+                    <input type="hidden" name="commentId" value={comment.id} />
+                    <input type="hidden" name="itemId" value={itemId} />
                     <Button type="submit" size="sm" variant="outline">
                       {t.itemDetail.deleteMessage}
                     </Button>
@@ -89,6 +79,7 @@ export function CommentSection({
 
       {mode === "ready" && status === "ACTIVE" ? (
         <form action={action} className="space-y-3">
+          <input type="hidden" name="itemId" value={itemId} />
           <Textarea
             name="body"
             required
@@ -109,6 +100,7 @@ export function CommentSection({
 
       {canRate ? (
         <form action={rateAction} className="flex flex-wrap items-center gap-3">
+          <input type="hidden" name="itemId" value={itemId} />
           <label className="text-sm font-medium" htmlFor="score">
             {t.itemDetail.rateSeller}
           </label>

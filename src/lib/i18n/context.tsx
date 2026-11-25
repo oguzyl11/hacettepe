@@ -5,7 +5,6 @@ import {
   useContext,
   useState,
   useCallback,
-  useEffect,
   type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
@@ -30,23 +29,12 @@ export function LanguageProvider({
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
   const router = useRouter();
 
-  // Sync with cookies/localStorage on client mount if available
-  useEffect(() => {
-    try {
-      const match = document.cookie.match(/(?:^|;\s*)locale=([^;]*)/);
-      if (match && (match[1] === "tr" || match[1] === "en")) {
-        setLocaleState(match[1] as Locale);
-      }
-    } catch {
-      // ignore
-    }
-  }, []);
-
   const setLocale = useCallback(
     (next: Locale) => {
       setLocaleState(next);
       try {
-        document.cookie = `locale=${next}; path=/; max-age=31536000; SameSite=Lax`;
+        const secure = window.location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = `locale=${next}; path=/; max-age=31536000; SameSite=Lax${secure}`;
         if (typeof window !== "undefined") {
           localStorage.setItem("locale", next);
         }
