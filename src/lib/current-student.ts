@@ -5,6 +5,6 @@ export async function currentStudent() {
   const session = await auth();
   const email = session?.user?.email;
   const id = session?.user?.id;
-  if (!id || !isHacettepeEmail(email)) return null;
+  if (!id || !email || !isHacettepeEmail(email)) return null;
   return { id, email };
 }

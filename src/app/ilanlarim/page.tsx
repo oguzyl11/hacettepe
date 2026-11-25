@@ -92,7 +92,12 @@ async function ListingsBody() {
                 </span>
                 <span className="ml-auto">{formatDate(item.createdAt.toISOString())}</span>
               </div>
-              <form action={deleteItem.bind(null, item.id)} className="mt-4">
+              <form
+                action={async () => {
+                  await deleteItem(item.id);
+                }}
+                className="mt-4"
+              >
                 <Button type="submit" variant="outline" size="sm">
                   {t.itemDetail.deleteListing}
                 </Button>

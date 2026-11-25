@@ -60,14 +60,22 @@ export function CommentSection({
               <p className="mt-1 text-sm leading-6">{comment.body}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {canSell && comment.authorId !== ownerId ? (
-                  <form action={markSold.bind(null, itemId, comment.authorId)}>
+                  <form
+                    action={async () => {
+                      await markSold(itemId, comment.authorId);
+                    }}
+                  >
                     <Button type="submit" size="sm">
                       {t.itemDetail.markSold}
                     </Button>
                   </form>
                 ) : null}
                 {viewerId === comment.authorId ? (
-                  <form action={deleteComment.bind(null, comment.id, itemId)}>
+                  <form
+                    action={async () => {
+                      await deleteComment(comment.id, itemId);
+                    }}
+                  >
                     <Button type="submit" size="sm" variant="outline">
                       {t.itemDetail.deleteMessage}
                     </Button>

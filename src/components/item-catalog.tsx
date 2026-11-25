@@ -202,7 +202,7 @@ export async function ItemCatalog({
               {t.catalog.next}
             </Link>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -78,7 +78,11 @@ async function ItemBody({ params }: { params: Promise<{ id: string }> }) {
           <p className="mt-2 text-sm leading-6">{listing.description}</p>
         </section>
         {student?.id === listing.owner.id ? (
-          <form action={deleteItem.bind(null, listing.id)}>
+          <form
+            action={async () => {
+              await deleteItem(listing.id);
+            }}
+          >
             <Button type="submit" variant="outline">
               {t.itemDetail.deleteListing}
             </Button>
