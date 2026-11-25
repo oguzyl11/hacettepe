@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
+import { deleteAccount } from "@/app/actions/account";
 import { useLanguage } from "@/lib/i18n/context";
 import type { Locale } from "@/lib/i18n/types";
 import { cn } from "@/lib/utils";
@@ -79,8 +80,8 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
             )}
           >
             <div className="flex items-center gap-3">
-              <span className="text-2xl" role="img" aria-label="Türkçe">
-                🇹🇷
+              <span className="grid size-9 place-items-center rounded-lg bg-primary/10 text-xs font-bold text-primary">
+                TR
               </span>
               <div>
                 <p className="font-semibold text-sm text-foreground">
@@ -110,8 +111,8 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
             )}
           >
             <div className="flex items-center gap-3">
-              <span className="text-2xl" role="img" aria-label="English">
-                🇬🇧
+              <span className="grid size-9 place-items-center rounded-lg bg-secondary/10 text-xs font-bold text-secondary">
+                EN
               </span>
               <div>
                 <p className="font-semibold text-sm text-foreground">
@@ -179,6 +180,28 @@ export function SettingsScreen({ userEmail }: { userEmail?: string | null }) {
       </section>
 
       {/* Back to Home Link */}
+      {userEmail ? (
+        <section className="rounded-xl border border-border bg-card p-5 sm:p-6">
+          <h2 className="font-semibold">{t.settings.deleteAccount}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t.settings.deleteAccountDesc}</p>
+          <form action={deleteAccount} className="mt-4 space-y-3">
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" name="confirm" value="yes" required />
+              {t.settings.deleteConfirm}
+            </label>
+            <button
+              type="submit"
+              className="h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-white"
+            >
+              {t.settings.deleteAccount}
+            </button>
+          </form>
+          <Link href="/gizlilik" className="mt-4 inline-block text-sm font-semibold text-primary">
+            {t.settings.privacy}
+          </Link>
+        </section>
+      ) : null}
+
       <div className="pt-2 text-center">
         <Link
           href="/"

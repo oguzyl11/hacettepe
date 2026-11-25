@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { LanguageProvider } from "@/lib/i18n/context";
 import { getServerLocale } from "@/lib/i18n/server";
+import { assertProductionSecret } from "@/lib/secrets";
 import "./globals.css";
 
 const inter = Inter({
@@ -26,6 +27,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  assertProductionSecret();
   const locale = await getServerLocale();
 
   return (

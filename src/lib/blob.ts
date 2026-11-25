@@ -40,8 +40,9 @@ export async function uploadImages(files: File[], folder: "ilan" | "profil") {
     const name = `${folder}-${crypto.randomUUID()}.${image.extension}`;
     if (!mediaNamePattern.test(name)) return { urls: [], error: "type" as const };
     const contentType = imageContentType(image.extension);
+    const body = Buffer.from(image.bytes);
     if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(`${folder}/${name}`, new Blob([image.bytes], { type: contentType }), {
+      const blob = await put(`${folder}/${name}`, body, {
         access: "public",
         token: process.env.BLOB_READ_WRITE_TOKEN,
         contentType,
@@ -50,7 +51,7 @@ export async function uploadImages(files: File[], folder: "ilan" | "profil") {
     } else {
       const root = uploadRoot();
       await mkdir(root, { recursive: true });
-      await writeFile(path.join(root, name), image.bytes);
+      await writeFile(path.join(root, name), body);
       urls.push(`/media/${name}`);
     }
   }

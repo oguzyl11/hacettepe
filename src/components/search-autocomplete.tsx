@@ -188,7 +188,7 @@ export function SearchAutocomplete({
         if (err instanceof DOMException && err.name === "AbortError") {
           return;
         }
-        console.error("Öneri alınamadı:", err);
+        console.error("search.suggestions", err);
       } finally {
         setIsLoading(false);
       }

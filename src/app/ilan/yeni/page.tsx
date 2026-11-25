@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { connection } from "next/server";
-import { auth } from "@/auth";
 import { ListingForm } from "@/components/listing-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { currentStudent } from "@/lib/current-student";
 import { getPrisma } from "@/lib/prisma";
 import { getServerDictionary } from "@/lib/i18n/server";
 
@@ -21,12 +21,12 @@ export default function NewListingPage() {
 
 async function NewListingBody() {
   await connection();
-  const [session, { t, locale }] = await Promise.all([
-    auth(),
+  const [student, { t, locale }] = await Promise.all([
+    currentStudent(),
     getServerDictionary(),
   ]);
 
-  if (!session?.user) {
+  if (!student) {
     return (
       <Card>
         <CardHeader>

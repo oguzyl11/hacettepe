@@ -11,6 +11,9 @@ build
 *.md
 .env
 .env.*
+uploads
+backups
+stitch_hacettepe_takas_platform
 **/.npmrc
 *.pem
 *.tsbuildinfo

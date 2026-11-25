@@ -52,7 +52,9 @@ async function SignInBody({
       error={params.error}
       googleEnabled={authProviders.google}
       emailEnabled={authProviders.email}
-      devLogin={process.env.NODE_ENV === "development"}
+      devLogin={
+        process.env.NODE_ENV === "development" && process.env.ALLOW_DEV_LOGIN === "true"
+      }
     />
   );
 }

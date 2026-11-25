@@ -5,7 +5,7 @@ import { useTranslation } from "@/lib/i18n/context";
 import { LanguageToggle } from "@/components/language-toggle";
 
 export function SiteFooter() {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <footer className="mt-auto border-t border-border bg-card">
@@ -59,9 +59,14 @@ export function SiteFooter() {
             <li>
               <Link
                 href="/ayarlar"
-                className="text-muted-foreground hover:text-foreground font-medium text-primary"
+                className="font-medium text-primary hover:text-foreground"
               >
                 {t.settings.title}
+              </Link>
+            </li>
+            <li>
+              <Link href="/gizlilik" className="text-muted-foreground hover:text-foreground">
+                {t.footer.privacy}
               </Link>
             </li>
           </ul>

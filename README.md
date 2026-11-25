@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hacettepe Takas
 
-## Getting Started
+Kampüs içi takas platformu. Öğrenciler `@hacettepe.edu.tr` adresiyle giriş yapar, ilan verir, ilanın altında mesajlaşır. Satıcı, mesaj yazan bir öğrenciyi alıcı seçince ilan satıldı olur. Yalnızca o alıcı satıcıya 1–5 puan verir.
 
-First, run the development server:
+## Yerel Docker
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Uygulama [http://localhost:3000](http://localhost:3000) adresindedir. Postgres yalnızca `127.0.0.1:5433` üzerinden dinler. Bu komut `compose.override.yaml` dosyasını da yükler ve geliştirme sunucusunu açar. Geliştirme girişi yalnızca bu override içinde `ALLOW_DEV_LOGIN=true` olduğu için görünür.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Canlı yığın override dosyasını almaz:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+docker compose -f compose.yaml up --build
+```
 
-## Learn More
+Canlıda `AUTH_SECRET` ve `POSTGRES_PASSWORD` benzersiz olmalıdır. Bilinen geliştirme sırrıyla üretim süreci açılmaz. Ayrıntılar `.env.example` içindedir.
 
-To learn more about Next.js, take a look at the following resources:
+`BLOB_READ_WRITE_TOKEN` yoksa ilan ve profil görselleri `uploads` volume’una yazılır ve `/media/` altından sunulur.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Yedek
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+sh docker/backup.sh
+```
 
-## Deploy on Vercel
+Geri yükleme:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+docker compose exec -T db psql -U hacettepe -d hacettepe < backups/hacettepe-YYYYMMDD-HHMMSS.sql
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Kontrol
+
+```bash
+npm run lint
+npx tsc --noEmit
+npm test
+```

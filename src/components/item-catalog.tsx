@@ -22,6 +22,7 @@ type Query = {
   durum?: string;
   iletisim?: string;
   q?: string;
+  sayfa?: string;
 };
 
 export async function ItemCatalog({
@@ -41,11 +42,13 @@ export async function ItemCatalog({
     params.iletisim && isContactMethod(params.iletisim)
       ? params.iletisim
       : undefined;
-  const { listings } = await getListings({
+  const page = Math.max(1, Number.parseInt(params.sayfa ?? "1", 10) || 1);
+  const { listings, total, pageCount, unavailable } = await getListings({
     category,
     condition,
     contact,
     query: params.q,
+    page,
   });
 
   const current = {
@@ -115,7 +118,7 @@ export async function ItemCatalog({
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm text-muted-foreground">
-              {t.catalog.listingsCount.replace("{count}", String(listings.length))}
+              {t.catalog.listingsCount.replace("{count}", String(total))}
             </p>
             {params.q ? (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -131,30 +134,73 @@ export async function ItemCatalog({
             ) : null}
           </div>
         </div>
-        {listings.length === 0 ? (
+        {unavailable ? (
           <div className="rounded-xl border border-dashed border-border bg-card px-6 py-16 text-center">
-            <p className="font-display text-lg font-semibold">
-              {params.q
-                ? t.catalog.noSearchResults.replace("{query}", params.q)
-                : t.catalog.noListings}
-            </p>
-            {params.q ? (
-              <p className="mt-2 text-sm text-muted-foreground">
-                <Link
-                  href={href(current, { q: undefined })}
-                  className="font-semibold text-primary hover:underline"
-                >
-                  {t.catalog.clearSearch}
-                </Link>{" "}
-                {t.catalog.orBrowseCategories}
-              </p>
-            ) : null}
+            <p className="font-display text-lg font-semibold">{t.catalog.unavailable}</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {listings.map((listing) => (
-              <ItemCard key={listing.id} listing={listing} locale={locale} />
-            ))}
+          <>
+            {listings.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border bg-card px-6 py-16 text-center">
+                <p className="font-display text-lg font-semibold">
+                  {params.q
+                    ? t.catalog.noSearchResults.replace("{query}", params.q)
+                    : t.catalog.noListings}
+                </p>
+                {params.q ? (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    <Link
+                      href={href(current, { q: undefined })}
+                      className="font-semibold text-primary hover:underline"
+                    >
+                      {t.catalog.clearSearch}
+                    </Link>{" "}
+                    {t.catalog.orBrowseCategories}
+                  </p>
+                ) : null}
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {listings.map((listing) => (
+                  <ItemCard
+                    key={listing.id}
+                    listing={listing}
+                    locale={locale}
+                    soldLabel={t.itemDetail.sold}
+                    scoreLabel={t.profile.score}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+        {pageCount > 1 ? (
+          <div className="mt-6 flex items-center justify-between gap-3 text-sm">
+            <Link
+              href={pageHref(current, page - 1)}
+              aria-disabled={page <= 1}
+              className={cn(
+                "rounded-lg border border-border bg-card px-3 py-2 font-semibold",
+                page <= 1 && "pointer-events-none opacity-40",
+              )}
+            >
+              {t.catalog.previous}
+            </Link>
+            <p className="text-muted-foreground">
+              {t.catalog.pageStatus
+                .replace("{page}", String(page))
+                .replace("{pages}", String(pageCount))}
+            </p>
+            <Link
+              href={pageHref(current, page + 1)}
+              aria-disabled={page >= pageCount}
+              className={cn(
+                "rounded-lg border border-border bg-card px-3 py-2 font-semibold",
+                page >= pageCount && "pointer-events-none opacity-40",
+              )}
+            >
+              {t.catalog.next}
+            </Link>
           </div>
         )}
       </div>
@@ -204,11 +250,16 @@ function FilterLink({
 }
 
 function href(current: Query, patch: Partial<Query>) {
-  const next = { ...current, ...patch };
+  return pageHref({ ...current, ...patch }, 1);
+}
+
+function pageHref(current: Query, page: number) {
   const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(next)) {
-    if (value) params.set(key, value);
+  for (const [key, value] of Object.entries(current)) {
+    if (key === "sayfa" || !value) continue;
+    params.set(key, value);
   }
+  if (page > 1) params.set("sayfa", String(page));
   const query = params.toString();
   return query ? `/?${query}` : "/";
 }

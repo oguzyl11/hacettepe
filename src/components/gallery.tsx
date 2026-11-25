@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ItemCategory } from "@prisma/client";
 import { categoryLabel } from "@/lib/labels";
 
@@ -31,8 +32,8 @@ export function Gallery({
           key={`${title}-${index}`}
         className={
           compact
-            ? `flex aspect-[4/3] items-center justify-center bg-gradient-to-br ${tones[category]} p-4`
-            : `flex items-center justify-center bg-gradient-to-br ${tones[category]} p-4 ${
+            ? `relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br ${tones[category]} p-4`
+            : `relative flex items-center justify-center overflow-hidden bg-gradient-to-br ${tones[category]} p-4 ${
                 index === 0
                   ? "min-h-64 rounded-3xl sm:row-span-3 sm:min-h-72"
                   : "hidden min-h-24 rounded-2xl sm:flex"
@@ -40,12 +41,12 @@ export function Gallery({
         }
         >
           {src ? (
-            // Vercel Blob adresleri sonra bağlanacak; şimdilik kayıtlı URL doğrudan gösterilir.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={src}
-              alt={`${title} görseli ${index + 1}`}
-              className="h-full w-full rounded-2xl object-cover"
+              alt={`${title} ${index + 1}`}
+              fill
+              sizes={index === 0 ? "(min-width: 1024px) 60vw, 100vw" : "240px"}
+              className="object-cover"
             />
           ) : (
             <span className="text-sm font-semibold tracking-wide text-stone-800/80">
