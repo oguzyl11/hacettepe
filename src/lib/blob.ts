@@ -11,10 +11,6 @@ import { logger } from "@/lib/logger";
 
 const maxFiles = 4;
 
-export function uploadRoot() {
-  return process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
-}
-
 export function imageFiles(formData: FormData, field: string) {
   return formData
     .getAll(field)
@@ -49,7 +45,7 @@ export async function uploadImages(files: File[], folder: "ilan" | "profil") {
       });
       urls.push(blob.url);
     } else {
-      const root = uploadRoot();
+      const root = path.join(process.cwd(), "uploads");
       await mkdir(root, { recursive: true });
       await writeFile(path.join(root, name), body);
       urls.push(`/media/${name}`);
@@ -64,8 +60,8 @@ export async function removeStoredImages(urls: string[]) {
     if (url.startsWith("/media/")) {
       const name = url.slice("/media/".length);
       if (!mediaNamePattern.test(name)) continue;
-      const root = path.resolve(uploadRoot());
-      const resolved = path.resolve(root, name);
+      const root = path.join(process.cwd(), "uploads");
+      const resolved = path.join(root, name);
       if (!resolved.startsWith(`${root}${path.sep}`)) continue;
       await unlink(resolved).catch((error: unknown) => {
         logger.error("image.unlink", error);

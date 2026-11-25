@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { imageContentType, mediaNamePattern, type ImageExtension } from "@/lib/image-signature";
-import { uploadRoot } from "@/lib/blob";
 
 export async function GET(
   _request: Request,
@@ -12,8 +11,8 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
   const extension = name.slice(name.lastIndexOf(".") + 1) as ImageExtension;
-  const root = path.resolve(uploadRoot());
-  const resolved = path.resolve(root, name);
+  const root = path.join(process.cwd(), "uploads");
+  const resolved = path.join(root, name);
   if (!resolved.startsWith(`${root}${path.sep}`)) {
     return new Response("Not found", { status: 404 });
   }
