@@ -20,8 +20,10 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Hacettepe Takas | Campus Barter",
-  description: "Hacettepe öğrencileri için kampüs içi takas platformu. Campus barter platform for Hacettepe students.",
+  title: "Tepeli",
+  description:
+    "Tepeli, Hacettepe öğrencileri için kampüs içi takas platformu. Campus barter for Hacettepe students.",
+  icons: { icon: "/tepeli-mark.svg" },
 };
 
 export default async function RootLayout({

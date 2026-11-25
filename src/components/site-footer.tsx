@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/context";
 import { LanguageToggle } from "@/components/language-toggle";
+import { TepeliLogo } from "@/components/tepeli-logo";
 
 export function SiteFooter() {
   const { t } = useTranslation();
@@ -11,9 +12,7 @@ export function SiteFooter() {
     <footer className="mt-auto border-t border-border bg-card">
       <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-4">
         <div>
-          <p className="font-display text-sm font-bold text-primary">
-            {t.common.siteName}
-          </p>
+          <TepeliLogo markClassName="size-7" wordClassName="text-base" />
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             {t.footer.campusBarter}
           </p>

@@ -3,7 +3,7 @@ import type { Dictionary, Locale } from "./types";
 export const dictionaries: Record<Locale, Dictionary> = {
   tr: {
     common: {
-      siteName: "Hacettepe Takas",
+      siteName: "Tepeli",
       siteTagline: "Kampüs içi öğrenci takas platformu",
       campusBadge: "Yalnızca @hacettepe.edu.tr",
       nav: {
@@ -159,7 +159,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       createFirst: "İlk ilanını ver",
     },
     auth: {
-      signInTitle: "Hacettepe Takas'a Giriş Yap",
+      signInTitle: "Tepeli'ye giriş yap",
       signInPrompt: "Devam etmek için giriş yap",
       onlyHacettepe:
         "Sadece @hacettepe.edu.tr uzantılı e-postalar ile giriş yapılabilir.",
@@ -185,7 +185,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     privacy: {
       title: "Aydınlatma metni",
       intro:
-        "Bu metin Hacettepe Takas’ın işlediği kişisel verileri açıklar. Bir avukat görüşü değildir; platformun gerçek veri akışını anlatan taslaktır.",
+        "Bu metin Tepeli’nin işlediği kişisel verileri açıklar. Bir avukat görüşü değildir; platformun gerçek veri akışını anlatan taslaktır.",
       dataTitle: "İşlenen veriler",
       data:
         "Ad, @hacettepe.edu.tr e-posta adresi, profil fotoğrafı, isteğe bağlı Instagram kullanıcı adı, ilan içeriği, ilan görselleri, ilan altındaki mesajlar ve satış puanı işlenir.",
@@ -230,7 +230,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
 
   en: {
     common: {
-      siteName: "Hacettepe Barter",
+      siteName: "Tepeli",
       siteTagline: "Campus barter platform for students",
       campusBadge: "Only @hacettepe.edu.tr",
       nav: {
@@ -384,7 +384,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       createFirst: "Post your first listing",
     },
     auth: {
-      signInTitle: "Sign In to Hacettepe Barter",
+      signInTitle: "Sign in to Tepeli",
       signInPrompt: "Sign in to continue",
       onlyHacettepe: "Only @hacettepe.edu.tr email addresses are allowed.",
       googleSignIn: "Sign in with Google",
@@ -409,7 +409,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     privacy: {
       title: "Privacy notice",
       intro:
-        "This notice explains the personal data Hacettepe Barter processes. It is a draft of the real data flow, not a legal opinion.",
+        "This notice explains the personal data Tepeli processes. It is a draft of the real data flow, not a legal opinion.",
       dataTitle: "Data we process",
       data:
         "Name, @hacettepe.edu.tr email, profile photo, optional Instagram username, listing content, listing images, messages under a listing, and sale ratings.",

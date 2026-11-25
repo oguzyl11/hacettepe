@@ -10,18 +10,14 @@ import {
   MobileSearchToggle,
 } from "@/components/search-autocomplete";
 import { LanguageToggle } from "@/components/language-toggle";
+import { TepeliLogo } from "@/components/tepeli-logo";
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-          <span className="grid size-8 place-items-center rounded-lg bg-primary text-sm font-bold text-white">
-            H
-          </span>
-          <span className="font-display text-sm font-bold tracking-tight">
-            Hacettepe Takas
-          </span>
+        <Link href="/" className="shrink-0">
+          <TepeliLogo />
         </Link>
         <div className="hidden min-w-0 flex-1 max-w-xl md:block">
           <Suspense

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { BadgeCheck, BookOpen } from "lucide-react";
 import { InstagramMark } from "@/components/instagram-mark";
+import { TepeliLogo } from "@/components/tepeli-logo";
 import { ItemCatalog } from "@/components/item-catalog";
 import { getServerDictionary } from "@/lib/i18n/server";
 
@@ -47,9 +48,10 @@ export default async function Home({
               </Link>
             </div>
           </div>
-          <div className="hidden items-end justify-end md:flex">
-            <div className="w-full max-w-sm rounded-xl bg-white/10 p-4 text-sm">
-              {t.home.heroHint}
+          <div className="hidden items-center justify-end md:flex">
+            <div className="w-full max-w-sm rounded-xl bg-white p-5">
+              <TepeliLogo markClassName="size-14" wordClassName="text-3xl" />
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{t.home.heroHint}</p>
             </div>
           </div>
         </div>
