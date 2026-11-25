@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { InstagramLink } from "@/components/instagram-link";
 import type { ListingOwner } from "@/lib/listings";
 

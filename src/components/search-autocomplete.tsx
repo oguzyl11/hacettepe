@@ -10,7 +10,8 @@ import {
   type KeyboardEvent,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
+import { localizePath } from "@/lib/locale";
 import {
   Search,
   Loader2,
@@ -232,9 +233,9 @@ export function SearchAutocomplete({
       setSelectedIndex(-1);
       inputRef.current?.blur();
       onNavigate?.();
-      router.push(url);
+      router.push(localizePath(locale, url));
     },
-    [router, onNavigate]
+    [router, onNavigate, locale]
   );
 
   const handleSubmit = (e?: FormEvent) => {
@@ -575,7 +576,7 @@ export function SearchAutocomplete({
                             )}
                           >
                             {results.totalMatches}{" "}
-                            {locale === "tr" ? "ilan" : "listings"}
+                            {t.search.listingNoun}
                           </span>
                         )}
                       </button>

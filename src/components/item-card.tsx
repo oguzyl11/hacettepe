@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { MapPin } from "lucide-react";
 import { ItemCondition } from "@prisma/client";
 import { InstagramLink } from "@/components/instagram-link";
@@ -71,7 +71,7 @@ export function ItemCard({
             <span className="rounded bg-primary/10 px-2 py-0.5 font-bold tracking-wider text-primary uppercase">
               {getCategoryLabel(listing.category, locale)}
             </span>
-            <span className="shrink-0">{formatDate(listing.createdAt)}</span>
+            <span className="shrink-0">{formatDate(listing.createdAt, locale)}</span>
           </div>
           <Link href={`/ilan/${listing.id}`}>
             <h2 className="line-clamp-1 text-sm font-bold text-slate-900 transition-colors group-hover:text-primary">

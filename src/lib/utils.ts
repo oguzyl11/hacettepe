@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { stripLocalePrefix } from "@/lib/locale";
+import type { Locale } from "@/lib/i18n/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,12 +15,23 @@ export function isHacettepeEmail(email: string | null | undefined) {
 }
 
 export function safeRedirectPath(path: string | undefined) {
-  if (!path || !path.startsWith("/") || path.startsWith("//")) return "/";
-  return path;
+  if (!path || !path.startsWith("/") || path.startsWith("//") || path.includes("\\") || path.includes("://")) {
+    return "/";
+  }
+  const hashIndex = path.indexOf("#");
+  const hash = hashIndex >= 0 ? path.slice(hashIndex) : "";
+  const beforeHash = hashIndex >= 0 ? path.slice(0, hashIndex) : path;
+  const queryIndex = beforeHash.indexOf("?");
+  const query = queryIndex >= 0 ? beforeHash.slice(queryIndex) : "";
+  const pathname = queryIndex >= 0 ? beforeHash.slice(0, queryIndex) : beforeHash;
+  const bare = stripLocalePrefix(pathname);
+  if (pathname.startsWith("/tr/") || pathname === "/tr") {
+    return `${bare}${query}${hash}`;
+  }
+  return `${pathname}${query}${hash}`;
 }
 
-export function formatDate(iso: string) {
-  return new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium" }).format(
-    new Date(iso),
-  );
+export function formatDate(iso: string, locale: Locale = "tr") {
+  const tag = locale === "en" ? "en-GB" : "tr-TR";
+  return new Intl.DateTimeFormat(tag, { dateStyle: "medium" }).format(new Date(iso));
 }

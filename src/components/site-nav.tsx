@@ -1,7 +1,8 @@
 "use client";
 
 import { Suspense } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
+import { stripLocalePrefix } from "@/lib/locale";
 import { LayoutGrid } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { categories, getCategoryLabel } from "@/lib/labels";
@@ -17,7 +18,7 @@ export function SiteNav() {
 }
 
 function CategoryStrip() {
-  const pathname = usePathname();
+  const pathname = stripLocalePrefix(usePathname());
   const params = useSearchParams();
   const { locale, t } = useTranslation();
   if (pathname.startsWith("/ilan/")) return null;

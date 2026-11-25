@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
+import { signInHref } from "@/lib/locale";
 import { addComment, deleteComment } from "@/app/actions/comment";
 import { markSold, rateSeller } from "@/app/actions/trade";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ export function CommentSection({
   buyerId: string | null;
   ratingScore: number | null;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const canSell = viewerId === ownerId && status === "ACTIVE";
   const canRate = viewerId !== null && viewerId === buyerId && status === "SOLD" && ratingScore === null;
 
@@ -58,7 +59,7 @@ export function CommentSection({
                     </span>
                   ) : null}
                 </span>
-                <time dateTime={comment.createdAt}>{formatDate(comment.createdAt)}</time>
+                <time dateTime={comment.createdAt}>{formatDate(comment.createdAt, locale)}</time>
               </div>
               <p className="mt-2 pl-11 text-sm leading-6 text-[#0b1c30]">{comment.body}</p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -125,7 +126,7 @@ export function CommentSection({
 
       {mode === "signin" && status === "ACTIVE" ? (
         <Button asChild variant="outline">
-          <Link href={`/giris?donus=/ilan/${itemId}`}>{t.itemDetail.signInToMessage}</Link>
+          <Link href={signInHref(locale, `/ilan/${itemId}`)}>{t.itemDetail.signInToMessage}</Link>
         </Button>
       ) : null}
     </section>

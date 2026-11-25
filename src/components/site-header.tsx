@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { Plus, Settings, UserRound } from "lucide-react";
 import { connection } from "next/server";
 import { auth } from "@/auth";
@@ -10,10 +10,9 @@ import {
 } from "@/components/search-autocomplete";
 import { LanguageToggle } from "@/components/language-toggle";
 import { TepeliMark, TepeliWordmark } from "@/components/tepeli-logo";
-import { getServerDictionary } from "@/lib/i18n/server";
+import type { Dictionary } from "@/lib/i18n/types";
 
-export async function SiteHeader() {
-  const { t } = await getServerDictionary();
+export function SiteHeader({ t }: { t: Dictionary }) {
 
   return (
     <>
@@ -72,7 +71,7 @@ export async function SiteHeader() {
               <Settings className="size-4" />
             </Link>
             <Suspense fallback={<div className="h-12 w-12 rounded-xl bg-slate-100" />}>
-              <AccountChip />
+              <AccountChip t={t} />
             </Suspense>
           </div>
         </div>
@@ -82,9 +81,8 @@ export async function SiteHeader() {
   );
 }
 
-async function AccountChip() {
+async function AccountChip({ t }: { t: Dictionary }) {
   await connection();
-  const { t } = await getServerDictionary();
   const session = await auth();
   if (!session?.user) {
     return (

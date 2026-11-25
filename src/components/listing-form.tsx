@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import {
   ArrowLeftRight,
   AtSign,

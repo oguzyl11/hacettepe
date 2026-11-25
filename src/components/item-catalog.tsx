@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { SlidersHorizontal, X } from "lucide-react";
 import { ItemCard } from "@/components/item-card";
 import {

@@ -17,6 +17,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       },
       searchPlaceholder: "Kampüste ne arıyorsun? (Kitap, klavye, defter...)",
       studentAccount: "Öğrenci hesabı",
+      studentName: "Öğrenci",
+      language: "Dil",
+      goToSignIn: "Giriş sayfasına git",
       clear: "Temizle",
       save: "Kaydet",
       saving: "Kaydediliyor...",
@@ -88,6 +91,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       quickCategories: "Hızlı Kategori Seçimi",
       clearSearch: "Aramayı temizle",
       submit: "Ara",
+      listingNoun: "ilan",
     },
     settings: {
       title: "Ayarlar",
@@ -109,6 +113,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Hesabın, ilanların, mesajların ve yüklediğin görseller silinir. Bu işlem geri alınmaz.",
       deleteConfirm: "Hesabımı kapatmak istiyorum",
       privacy: "Aydınlatma metni",
+      verificationTitle: "Hacettepe Üniversitesi doğrulaması",
+      verificationText:
+        "Platformdaki işlemler yalnızca onaylanmış @hacettepe.edu.tr adresine sahip öğrenciler arasında yürür.",
     },
     profile: {
       title: "Profil",
@@ -247,6 +254,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       description: "Yayındaki ve geçmiş takas ilanların",
       empty: "Henüz paylaştığın bir ilan yok.",
       createFirst: "İlk ilanını ver",
+      signInTitle: "İlanların için giriş yap",
+      activeCount: "{count} yayındaki ilan",
     },
     auth: {
       signInTitle: "Tepeli'ye giriş yap",
@@ -332,6 +341,11 @@ export const dictionaries: Record<Locale, Dictionary> = {
       rights:
         "Profilinden bilgilerini düzeltebilir, kendi ilanını ve mesajını silebilir, ayarlardan hesabını kapatabilirsin. Başvuru için hesapta kayıtlı Hacettepe adresin kullanılır.",
     },
+    notFound: {
+      title: "Sayfa bulunamadı",
+      text: "Bağlantı eski olabilir veya ilan kaldırılmış olabilir.",
+      home: "Vitrine dön",
+    },
     errors: {
       signIn: "Devam etmek için giriş yap.",
       database: "Veritabanı bağlı değil.",
@@ -374,6 +388,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       },
       searchPlaceholder: "What are you looking for on campus? (Books, keyboard...)",
       studentAccount: "Student account",
+      studentName: "Student",
+      language: "Language",
+      goToSignIn: "Go to sign-in page",
       clear: "Clear",
       save: "Save",
       saving: "Saving...",
@@ -444,6 +461,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       quickCategories: "Quick Categories",
       clearSearch: "Clear search",
       submit: "Search",
+      listingNoun: "listings",
     },
     settings: {
       title: "Settings",
@@ -465,6 +483,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Your account, listings, messages and uploaded images are deleted. This cannot be undone.",
       deleteConfirm: "I want to close my account",
       privacy: "Privacy notice",
+      verificationTitle: "Hacettepe University verification",
+      verificationText:
+        "Everything on the platform stays between students with a verified @hacettepe.edu.tr address.",
     },
     profile: {
       title: "Profile",
@@ -601,6 +622,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       description: "Your active and past barter listings",
       empty: "You haven't posted any listings yet.",
       createFirst: "Post your first listing",
+      signInTitle: "Sign in to view your listings",
+      activeCount: "{count} active listings",
     },
     auth: {
       signInTitle: "Sign in to Tepeli",
@@ -681,6 +704,11 @@ export const dictionaries: Record<Locale, Dictionary> = {
       rightsTitle: "Your rights",
       rights:
         "You can correct your profile, delete your own listings and messages, and close your account from settings. Requests use the Hacettepe address on the account.",
+    },
+    notFound: {
+      title: "Page not found",
+      text: "The link may be old, or the listing may have been removed.",
+      home: "Back to the showcase",
     },
     errors: {
       signIn: "Sign in to continue.",

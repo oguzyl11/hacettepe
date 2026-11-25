@@ -23,6 +23,9 @@ export type Dictionary = {
     delete: string;
     back: string;
     studentAccount: string;
+    studentName: string;
+    language: string;
+    goToSignIn: string;
     location: string;
     date: string;
     all: string;
@@ -84,6 +87,7 @@ export type Dictionary = {
     quickCategories: string;
     clearSearch: string;
     submit: string;
+    listingNoun: string;
   };
   settings: {
     title: string;
@@ -104,6 +108,8 @@ export type Dictionary = {
     deleteAccountDesc: string;
     deleteConfirm: string;
     privacy: string;
+    verificationTitle: string;
+    verificationText: string;
   };
   profile: {
     title: string;
@@ -239,6 +245,8 @@ export type Dictionary = {
     description: string;
     empty: string;
     createFirst: string;
+    signInTitle: string;
+    activeCount: string;
   };
   auth: {
     signInTitle: string;
@@ -310,6 +318,11 @@ export type Dictionary = {
     transfer: string;
     rightsTitle: string;
     rights: string;
+  };
+  notFound: {
+    title: string;
+    text: string;
+    home: string;
   };
   errors: {
     signIn: string;

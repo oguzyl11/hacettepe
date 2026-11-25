@@ -1,39 +1,60 @@
 "use client";
 
-import { useLanguage } from "@/lib/i18n/context";
-import { Globe } from "lucide-react";
+import { Suspense } from "react";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+import { switchLocalePath } from "@/lib/locale";
+import { useTranslation } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/types";
 
 export function LanguageToggle({ className }: { className?: string }) {
-  const { locale, setLocale } = useLanguage();
+  return (
+    <Suspense fallback={<div className={cn("h-8 w-16 rounded-full bg-slate-100", className)} />}>
+      <LanguageToggleInner className={className} />
+    </Suspense>
+  );
+}
 
-  const toggleLanguage = () => {
-    const next = locale === "tr" ? "en" : "tr";
-    setLocale(next);
-  };
+function LanguageToggleInner({ className }: { className?: string }) {
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const { locale, t } = useTranslation();
+  const query = search.toString();
 
   return (
-    <button
-      type="button"
-      onClick={toggleLanguage}
-      title={
-        locale === "tr"
-          ? "Switch to English (İngilizceye geç)"
-          : "Türkçeye geç (Switch to Turkish)"
-      }
-      aria-label="Dil değiştir / Switch language"
+    <nav aria-label={t.common.language} className={cn("inline-flex rounded-full border border-slate-200 bg-white p-0.5 text-xs font-bold", className)}>
+      <LanguageChoice current={locale} choice="tr" pathname={pathname} query={query} label="TR" />
+      <LanguageChoice current={locale} choice="en" pathname={pathname} query={query} label="EN" />
+    </nav>
+  );
+}
+
+function LanguageChoice({
+  current,
+  choice,
+  pathname,
+  query,
+  label,
+}: {
+  current: Locale;
+  choice: Locale;
+  pathname: string;
+  query: string;
+  label: string;
+}) {
+  const active = current === choice;
+  return (
+    <Link
+      href={switchLocalePath(pathname, query, choice)}
+      hrefLang={choice}
+      aria-current={active ? "true" : undefined}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-2xs",
-        className
+        "rounded-full px-2.5 py-1 tracking-wide",
+        active ? "bg-[#991b1b] text-white" : "text-slate-500 hover:text-slate-900",
       )}
     >
-      <Globe className="size-3.5 text-muted-foreground" />
-      <span className="font-bold tracking-wide">
-        {locale === "tr" ? "TR" : "EN"}
-      </span>
-      <span className="text-[10px] text-muted-foreground">
-        {locale === "tr" ? "🇬🇧 EN" : "🇹🇷 TR"}
-      </span>
-    </button>
+      {label}
+    </Link>
   );
 }

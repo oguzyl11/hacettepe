@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/locale-link";
 import { useTranslation } from "@/lib/i18n/context";
 import { LanguageToggle } from "@/components/language-toggle";
 import { TepeliLogo } from "@/components/tepeli-logo";
