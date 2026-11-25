@@ -1,9 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import type { ActionResult } from "@/lib/action-state";
 import { currentStudent } from "@/lib/current-student";
-import { getServerDictionary } from "@/lib/i18n/server";
 import { logger } from "@/lib/logger";
 import { getPrisma } from "@/lib/prisma";
 import { applyRating, canMarkSold, canRate } from "@/lib/trade";
@@ -79,19 +77,15 @@ export async function markSold(formData: FormData): Promise<void> {
   }
 }
 
-export async function rateSeller(
-  _previous: ActionResult,
-  formData: FormData,
-): Promise<ActionResult> {
-  const { t } = await getServerDictionary();
+export async function rateSeller(formData: FormData): Promise<void> {
   const student = await currentStudent();
-  if (!student) return { success: false, message: t.errors.signIn };
+  if (!student) return;
   const prisma = getPrisma();
-  if (!prisma) return { success: false, message: t.errors.database };
+  if (!prisma) return;
 
   const itemId = formId(formData, "itemId");
   const parsed = scoreSchema.safeParse(formData.get("score"));
-  if (!itemId || !parsed.success) return { success: false, message: t.errors.invalid };
+  if (!itemId || !parsed.success) return;
 
   try {
     const item = await prisma.item.findUnique({
@@ -103,20 +97,20 @@ export async function rateSeller(
         rating: { select: { id: true } },
       },
     });
-    if (!item) return { success: false, message: t.errors.notFound };
+    if (!item) return;
     const allowed = canRate({
       actorId: student.id,
       buyerId: item.buyerId,
       status: item.status,
       alreadyRated: Boolean(item.rating),
     });
-    if (!allowed) return { success: false, message: t.errors.forbidden };
+    if (!allowed) return;
 
     const seller = await prisma.user.findUnique({
       where: { id: item.ownerId },
       select: { ratingAverage: true, ratingCount: true },
     });
-    if (!seller) return { success: false, message: t.errors.notFound };
+    if (!seller) return;
     const next = applyRating(seller, parsed.data);
     await prisma.$transaction([
       prisma.rating.create({
@@ -135,10 +129,8 @@ export async function rateSeller(
     revalidatePath("/");
     revalidatePath(`/ilan/${itemId}`);
     revalidatePath(`/profil/${item.ownerId}`);
-    return { success: true, message: t.errors.rated };
   } catch (error) {
     logger.error("listing.rate", error);
-    return { success: false, message: t.errors.unavailable };
   }
 }
 

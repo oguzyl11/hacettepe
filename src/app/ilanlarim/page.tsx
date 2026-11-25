@@ -2,9 +2,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { connection } from "next/server";
 import { MessageCircle, Plus } from "lucide-react";
-import { deleteItem } from "@/app/actions/item";
+import { DeleteListingForm } from "@/components/delete-listing-form";
 import { SignInPrompt } from "@/components/sign-in-prompt";
-import { Button } from "@/components/ui/button";
 import { getMyListings } from "@/lib/activity";
 import { currentStudent } from "@/lib/current-student";
 import { getCategoryLabel, getConditionLabel } from "@/lib/labels";
@@ -92,12 +91,7 @@ async function ListingsBody() {
                 </span>
                 <span className="ml-auto">{formatDate(item.createdAt.toISOString())}</span>
               </div>
-              <form action={deleteItem} className="mt-4">
-                <input type="hidden" name="itemId" value={item.id} />
-                <Button type="submit" variant="outline" size="sm">
-                  {t.itemDetail.deleteListing}
-                </Button>
-              </form>
+              <DeleteListingForm itemId={item.id} label={t.itemDetail.deleteListing} size="sm" />
             </article>
           ))}
         </div>

@@ -2,11 +2,10 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { BadgeCheck, MapPin } from "lucide-react";
-import { deleteItem } from "@/app/actions/item";
 import { CommentSection } from "@/components/comment-section";
+import { DeleteListingForm } from "@/components/delete-listing-form";
 import { Gallery } from "@/components/gallery";
 import { OwnerContact } from "@/components/owner-contact";
-import { Button } from "@/components/ui/button";
 import { currentStudent } from "@/lib/current-student";
 import { getCategoryLabel, getConditionLabel } from "@/lib/labels";
 import { getListing } from "@/lib/listings";
@@ -77,10 +76,17 @@ async function ItemBody({ params }: { params: Promise<{ id: string }> }) {
           <h2 className="text-sm font-semibold">{t.itemDetail.listingDesc}</h2>
           <p className="mt-2 text-sm leading-6">{listing.description}</p>
         </section>
-        {student?.id === listing.owner.id ? (
-          <p className="text-sm text-muted-foreground">{t.itemDetail.deleteListing}</p>
-        ) : null}
-        {null}
+        <p>LAMP-CHECK</p>
+        <CommentSection
+          itemId={listing.id}
+          comments={listing.comments}
+          mode={commentMode}
+          viewerId={student?.id ?? null}
+          ownerId={listing.owner.id}
+          status={listing.status}
+          buyerId={listing.buyerId}
+          ratingScore={listing.ratingScore}
+        />
       </div>
       <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
         <OwnerContact

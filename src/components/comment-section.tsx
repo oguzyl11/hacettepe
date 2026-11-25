@@ -1,12 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
 import Link from "next/link";
 import { addComment, deleteComment } from "@/app/actions/comment";
 import { markSold, rateSeller } from "@/app/actions/trade";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { emptyActionState } from "@/lib/action-state";
 import type { ListingComment } from "@/lib/listings";
 import { formatDate } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n/context";
@@ -31,8 +29,6 @@ export function CommentSection({
   ratingScore: number | null;
 }) {
   const { t } = useTranslation();
-  const [state, action, pending] = useActionState(addComment, emptyActionState);
-  const [ratingState, rateAction, ratingPending] = useActionState(rateSeller, emptyActionState);
   const canSell = viewerId === ownerId && status === "ACTIVE";
   const canRate = viewerId !== null && viewerId === buyerId && status === "SOLD" && ratingScore === null;
 
@@ -78,7 +74,7 @@ export function CommentSection({
       )}
 
       {mode === "ready" && status === "ACTIVE" ? (
-        <form action={action} className="space-y-3">
+        <form action={addComment} className="space-y-3">
           <input type="hidden" name="itemId" value={itemId} />
           <Textarea
             name="body"
@@ -87,19 +83,12 @@ export function CommentSection({
             maxLength={1000}
             placeholder={t.itemDetail.messagePlaceholder}
           />
-          {state.message ? (
-            <p className={state.success ? "text-sm text-emerald-700" : "text-sm text-red-700"}>
-              {state.message}
-            </p>
-          ) : null}
-          <Button type="submit" disabled={pending}>
-            {pending ? t.common.saving : t.itemDetail.sendMessage}
-          </Button>
+          <Button type="submit">{t.itemDetail.sendMessage}</Button>
         </form>
       ) : null}
 
       {canRate ? (
-        <form action={rateAction} className="flex flex-wrap items-center gap-3">
+        <form action={rateSeller} className="flex flex-wrap items-center gap-3">
           <input type="hidden" name="itemId" value={itemId} />
           <label className="text-sm font-medium" htmlFor="score">
             {t.itemDetail.rateSeller}
@@ -116,14 +105,7 @@ export function CommentSection({
               </option>
             ))}
           </select>
-          <Button type="submit" disabled={ratingPending}>
-            {ratingPending ? t.common.saving : t.common.save}
-          </Button>
-          {ratingState.message ? (
-            <p className={ratingState.success ? "text-sm text-emerald-700" : "text-sm text-red-700"}>
-              {ratingState.message}
-            </p>
-          ) : null}
+          <Button type="submit">{t.common.save}</Button>
         </form>
       ) : null}
 
