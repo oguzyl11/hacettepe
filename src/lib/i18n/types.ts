@@ -47,6 +47,10 @@ export type Dictionary = {
     contact: string;
     all: string;
     listingsCount: string;
+    unavailable: string;
+    previous: string;
+    next: string;
+    pageStatus: string;
     noListings: string;
     searchResult: string;
     noSearchResults: string;
@@ -80,6 +84,10 @@ export type Dictionary = {
     accountDesc: string;
     goToProfile: string;
     backToHome: string;
+    deleteAccount: string;
+    deleteAccountDesc: string;
+    deleteConfirm: string;
+    privacy: string;
   };
   profile: {
     title: string;
@@ -97,6 +105,11 @@ export type Dictionary = {
     signInForProfile: string;
     dbNotReady: string;
     settingsLink: string;
+    score: string;
+    noScore: string;
+    soldItems: string;
+    portfolio: string;
+    viewInstagram: string;
   };
   itemDetail: {
     backToShowcase: string;
@@ -110,6 +123,16 @@ export type Dictionary = {
     noComments: string;
     signInToComment: string;
     commentPlaceholder: string;
+    messages: string;
+    sendMessage: string;
+    messagePlaceholder: string;
+    signInToMessage: string;
+    noMessages: string;
+    markSold: string;
+    sold: string;
+    rateSeller: string;
+    deleteListing: string;
+    deleteMessage: string;
   };
   newListing: {
     title: string;
@@ -149,5 +172,44 @@ export type Dictionary = {
     verificationText: string;
     studentToStudent: string;
     language: string;
+    privacy: string;
+  };
+  privacy: {
+    title: string;
+    intro: string;
+    dataTitle: string;
+    data: string;
+    purposeTitle: string;
+    purpose: string;
+    retentionTitle: string;
+    retention: string;
+    transferTitle: string;
+    transfer: string;
+    rightsTitle: string;
+    rights: string;
+  };
+  errors: {
+    signIn: string;
+    database: string;
+    rateLimited: string;
+    invalid: string;
+    notFound: string;
+    forbidden: string;
+    saved: string;
+    deleted: string;
+    sold: string;
+    rated: string;
+    photoType: string;
+    photoLimit: string;
+    googleNotReady: string;
+    emailNotReady: string;
+    hacettepeOnly: string;
+    magicLinkFailed: string;
+    magicLinkSent: string;
+    devLoginClosed: string;
+    profileSaved: string;
+    messageSaved: string;
+    listingSaved: string;
+    unavailable: string;
   };
 };

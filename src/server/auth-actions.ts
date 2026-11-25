@@ -6,16 +6,19 @@ import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { authProviders, signIn } from "@/auth";
 import type { ActionState } from "@/lib/action-state";
+import { getServerDictionary } from "@/lib/i18n/server";
 import { getPrisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 import { isHacettepeEmail, safeRedirectPath } from "@/lib/utils";
 
 const devStudentEmail = "dev.ogrenci@hacettepe.edu.tr";
 
 export async function signInWithGoogle(callbackPath: string) {
+  const { t } = await getServerDictionary();
   if (!authProviders.google) {
     return {
       success: false,
-      message: "Google girişi henüz ayarlı değil.",
+      message: t.errors.googleNotReady,
     } satisfies ActionState;
   }
   await signIn("google", { redirectTo: safeRedirectPath(callbackPath) });
@@ -26,31 +29,34 @@ export async function requestMagicLink(
   _previous: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const email = String(formData.get("email") ?? "");
+  const { t } = await getServerDictionary();
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!isHacettepeEmail(email)) {
     return {
       success: false,
-      message: "Yalnızca @hacettepe.edu.tr adresleri giriş yapabilir.",
+      message: t.errors.hacettepeOnly,
     };
   }
   if (!authProviders.email) {
     return {
       success: false,
-      message:
-        "E-posta girişi henüz ayarlı değil. EMAIL_SERVER ve EMAIL_FROM ekle.",
+      message: t.errors.emailNotReady,
     };
+  }
+  if (!rateLimit(`magic:${email}`, 5, 15 * 60 * 1000)) {
+    return { success: false, message: t.errors.rateLimited };
   }
 
   try {
     await signIn("nodemailer", {
-      email: email.trim().toLowerCase(),
+      email,
       redirectTo: safeRedirectPath(callbackPath),
     });
   } catch (error) {
     if (error instanceof AuthError) {
       return {
         success: false,
-        message: "Giriş bağlantısı gönderilemedi. E-posta ayarını kontrol et.",
+        message: t.errors.magicLinkFailed,
       };
     }
     throw error;
@@ -58,15 +64,16 @@ export async function requestMagicLink(
 
   return {
     success: true,
-    message: "Bağlantı gönderildiyse gelen kutunu kontrol et.",
+    message: t.errors.magicLinkSent,
   };
 }
 
 export async function signInAsDevStudent(callbackPath: string) {
-  if (process.env.NODE_ENV !== "development") {
+  const { t } = await getServerDictionary();
+  if (process.env.NODE_ENV !== "development" || process.env.ALLOW_DEV_LOGIN !== "true") {
     return {
       success: false,
-      message: "Bu giriş yalnızca yerel geliştirmede açık.",
+      message: t.errors.devLoginClosed,
     } satisfies ActionState;
   }
 
@@ -74,7 +81,7 @@ export async function signInAsDevStudent(callbackPath: string) {
   if (!prisma) {
     return {
       success: false,
-      message: "Veritabanı bağlı değil.",
+      message: t.errors.database,
     } satisfies ActionState;
   }
 
@@ -85,19 +92,6 @@ export async function signInAsDevStudent(callbackPath: string) {
       name: "Geliştirme Öğrencisi",
       email: devStudentEmail,
       emailVerified: new Date(),
-    },
-  });
-
-  await prisma.item.upsert({
-    where: { id: "dev-lamba" },
-    update: { ownerId: user.id },
-    create: {
-      id: "dev-lamba",
-      title: "Masa lambası",
-      description: "Yurt odasında kullandım. Kitap veya küçük elektronikle takas olur.",
-      category: "EV_ESYASI",
-      condition: "AZ_KULLANILMIS",
-      ownerId: user.id,
     },
   });
 

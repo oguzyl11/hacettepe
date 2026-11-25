@@ -32,12 +32,22 @@ model User {
   sessions       Session[]
   authenticators Authenticator[]
 
-  items          Item[]
-  comments       Comment[]
-  offersSent     Offer[]   @relation("OffersSent")
+  ratingAverage Float @default(0)
+  ratingCount   Int   @default(0)
+  soldCount     Int   @default(0)
+
+  items           Item[]
+  itemsBought     Item[]    @relation("ItemBuyer")
+  comments        Comment[]
+  offersSent      Offer[]   @relation("OffersSent")
+  ratingsGiven    Rating[]  @relation("RatingsGiven")
+  ratingsReceived Rating[]  @relation("RatingsReceived")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([soldCount])
+  @@index([ratingAverage])
 }
 
 model Account {
@@ -102,14 +112,19 @@ model Item {
   description String        @db.Text
   category    ItemCategory
   condition   ItemCondition
-  /// Vercel Blob bağlanana kadar URL listesi. Boş dizi yer tutucu galeri demektir.
-  images      String[]      @default([])
+  images String[] @default([])
+
+  status  ItemStatus @default(ACTIVE)
+  buyerId String?
+  buyer   User?      @relation("ItemBuyer", fields: [buyerId], references: [id], onDelete: SetNull)
+  soldAt  DateTime?
 
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   comments Comment[]
   offers   Offer[]
+  rating   Rating?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,6 +132,26 @@ model Item {
   @@index([category])
   @@index([ownerId])
   @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model Rating {
+  id     String @id @default(cuid())
+  score  Int
+
+  itemId String @unique
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  sellerId String
+  seller   User   @relation("RatingsReceived", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  raterId String
+  rater   User   @relation("RatingsGiven", fields: [raterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([sellerId])
+  @@index([raterId])
 }
 
 model Comment {
@@ -182,4 +217,9 @@ enum OfferStatus {
   ACCEPTED
   REJECTED
   CANCELLED
+}
+
+enum ItemStatus {
+  ACTIVE
+  SOLD
 }

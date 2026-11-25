@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Nodemailer from "next-auth/providers/nodemailer";
+import { assertProductionSecret } from "@/lib/secrets";
 import { isHacettepeEmail } from "@/lib/utils";
 import { getPrisma } from "@/lib/prisma";
 
@@ -21,7 +22,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: prisma ? PrismaAdapter(prisma) : undefined,
   session: { strategy: prisma ? "database" : "jwt" },
   secret: process.env.AUTH_SECRET,
-  trustHost: true,
+  trustHost: process.env.NODE_ENV !== "production",
   pages: {
     signIn: "/giris",
     error: "/giris",
@@ -51,12 +52,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       : []),
   ],
   callbacks: {
-    async signIn({ user, profile }) {
+    async signIn({ user, account, profile }) {
+      assertProductionSecret();
       const profileEmail =
         profile && "email" in profile && typeof profile.email === "string"
           ? profile.email
           : null;
-      return isHacettepeEmail(user.email ?? profileEmail);
+      if (!isHacettepeEmail(user.email ?? profileEmail)) return false;
+      if (account?.provider === "google") {
+        const verified =
+          profile && "email_verified" in profile ? profile.email_verified === true : false;
+        if (!verified) return false;
+      }
+      return true;
     },
     async jwt({ token, user }) {
       if (user?.id) token.sub = user.id;
