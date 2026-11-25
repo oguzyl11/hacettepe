@@ -8,6 +8,7 @@ export type Dictionary = {
     nav: {
       showcase: string;
       newListing: string;
+      postFree: string;
       myListings: string;
       settings: string;
       profile: string;
@@ -21,6 +22,7 @@ export type Dictionary = {
     edit: string;
     delete: string;
     back: string;
+    studentAccount: string;
     location: string;
     date: string;
     all: string;
@@ -33,6 +35,15 @@ export type Dictionary = {
     postListing: string;
     heroHint: string;
     howItWorks: string;
+    recentTitle: string;
+    recentEmpty: string;
+    seeAllListings: string;
+    verifiedTitle: string;
+    verifiedText: string;
+    allShowcase: string;
+    verifiedBadge: string;
+    verifiedBar: string;
+    newBadge: string;
     step1Title: string;
     step1Desc: string;
     step2Title: string;
@@ -56,6 +67,10 @@ export type Dictionary = {
     noSearchResults: string;
     clearSearch: string;
     orBrowseCategories: string;
+    currentListings: string;
+    clearFilters: string;
+    viewListing: string;
+    reachInstagram: string;
   };
   search: {
     categoriesHeader: string;
@@ -68,6 +83,7 @@ export type Dictionary = {
     popularSearches: string;
     quickCategories: string;
     clearSearch: string;
+    submit: string;
   };
   settings: {
     title: string;

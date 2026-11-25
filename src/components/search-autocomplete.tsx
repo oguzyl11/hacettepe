@@ -309,7 +309,7 @@ export function SearchAutocomplete({
           {t.search.listingsHeader}
         </label>
         <div className="relative flex w-full items-center">
-          <Search className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-4 size-4 text-slate-400" />
           <input
             ref={inputRef}
             id="search-input"
@@ -335,10 +335,10 @@ export function SearchAutocomplete({
             aria-activedescendant={
               selectedIndex >= 0 ? `suggestion-${selectedIndex}` : undefined
             }
-            className="h-10 w-full rounded-full border border-border bg-muted/60 pr-16 pl-10 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-full border border-slate-300 bg-slate-50 py-3 pr-28 pl-11 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 hover:bg-slate-100/70 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/15"
           />
 
-          <div className="absolute right-3 flex items-center gap-1">
+          <div className="absolute right-1.5 flex items-center gap-1">
             {isLoading && (
               <Loader2 className="size-4 animate-spin text-muted-foreground" />
             )}
@@ -347,11 +347,17 @@ export function SearchAutocomplete({
                 type="button"
                 onClick={clearQuery}
                 aria-label={t.search.clearSearch}
-                className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="rounded-full p-1 text-muted-foreground hover:bg-slate-200 hover:text-foreground"
               >
                 <X className="size-3.5" />
               </button>
             )}
+            <button
+              type="submit"
+              className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-primary/90"
+            >
+              {t.search.submit}
+            </button>
           </div>
         </div>
       </form>

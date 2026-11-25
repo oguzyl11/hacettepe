@@ -213,6 +213,37 @@ export async function getListings(filters: ListingFilters = {}): Promise<Listing
   }
 }
 
+const recentCount = 3;
+
+export async function getRecentListings(): Promise<Listing[]> {
+  const prisma = getPrisma();
+  if (!prisma) return [];
+
+  try {
+    const items = await prisma.item.findMany({
+      orderBy: { createdAt: "desc" },
+      take: recentCount,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        category: true,
+        condition: true,
+        status: true,
+        buyerId: true,
+        soldAt: true,
+        images: true,
+        createdAt: true,
+        owner: { select: ownerSelect },
+      },
+    });
+    return items.map((item) => toListing(item));
+  } catch (error) {
+    logger.error("listings.recent", error);
+    return [];
+  }
+}
+
 export async function getListing(id: string): Promise<{
   listing: Listing | null;
   unavailable: boolean;
