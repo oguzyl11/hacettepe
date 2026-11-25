@@ -22,7 +22,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: prisma ? PrismaAdapter(prisma) : undefined,
   session: { strategy: prisma ? "database" : "jwt" },
   secret: process.env.AUTH_SECRET,
-  trustHost: process.env.NODE_ENV !== "production",
+  trustHost:
+    process.env.AUTH_TRUST_HOST === "true" ||
+    process.env.VERCEL === "1" ||
+    process.env.NODE_ENV !== "production",
   pages: {
     signIn: "/giris",
     error: "/giris",
