@@ -76,7 +76,9 @@ async function ItemBody({ params }: { params: Promise<{ id: string }> }) {
           <h2 className="text-sm font-semibold">{t.itemDetail.listingDesc}</h2>
           <p className="mt-2 text-sm leading-6">{listing.description}</p>
         </section>
-        <p>LAMP-CHECK</p>
+        {student?.id === listing.owner.id ? (
+          <DeleteListingForm itemId={listing.id} label={t.itemDetail.deleteListing} />
+        ) : null}
         <CommentSection
           itemId={listing.id}
           comments={listing.comments}
